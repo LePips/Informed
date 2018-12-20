@@ -15,11 +15,13 @@ Split into national, state, and sometime local categories.
 National:
 - Presidency
 - Supreme Justices
+
 State:
 - Governor
 - Senate
 - House Representative
 - State ballot for Presidency
+
 ~~Local~~
 - ~~City Mayor~~
 
