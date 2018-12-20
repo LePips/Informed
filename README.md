@@ -5,6 +5,9 @@ The key point is that this is `crowd sourced` allowing anyone to submit informat
 
 ie: I won't know anything about the Alabama Governor race going on because I live in another state.
 
+The information for the app is currently hosted on Firebase.
+
+
 ### Categories
 Split into national, state, and sometime local categories.
 
