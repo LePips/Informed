@@ -19,16 +19,7 @@ struct Announcement: Codable {
     var version: Int
     
     static func getAnnouncement() {
-        Internet.GET(url: Firenet.announcements, source: .firebase) { response in
-            guard let data = response.value?.data else { return }
-            
-            do {
-                let announcement = try JSONDecoder().decode(Announcement.self, from: data)
-                AnnouncementState.core.fire(.fetched(announcement))
-            } catch {
-                print("error with announcement parsing")
-            }
-        }
+
     }
     
     func shouldBroadcast() -> Bool {

@@ -23,8 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         Election.getElections()
-        Election.getFeaturedElection()
-        Candidate.getCandidates()
+        Election.getElection(id: 1)
         
         return true
     }

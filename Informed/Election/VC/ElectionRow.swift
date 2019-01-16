@@ -60,10 +60,6 @@ extension ElectionRow {
         
         electionRows.append(.divider)
         
-        for section in election.info {
-            electionRows.append(.info(section.value))
-        }
-        
         electionRows.append(.divider)
         electionRows.append(.requestInfo)
         

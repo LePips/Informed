@@ -46,7 +46,6 @@ extension HomeViewController {
     
     @objc private func refresh(_ refreshControl: UIRefreshControl) {
         Election.getElections()
-        Election.getFeaturedElection()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             refreshControl.endRefreshing()
         }

@@ -19,10 +19,10 @@ class HomeCandidateCell: BasicTableViewCell {
     func configure(with candidate: Candidate) {
         _ = portraitCircle
         
-        if let imageURL = candidate.imageString {
-            let url = URL(string: imageURL)!
-            portraitCircle.kf.setImage(with: url)
-        }
+//        if let imageURL = candidate.imageString {
+//            let url = URL(string: imageURL)!
+//            portraitCircle.kf.setImage(with: url)
+//        }
     }
     
     private lazy var portraitCircle: UIImageView = self._protraitCircle()

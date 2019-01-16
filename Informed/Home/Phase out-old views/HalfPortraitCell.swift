@@ -24,11 +24,11 @@ class HalfPortraitCell: BasicTableViewCell {
         self.secondCandidate = candidates[1]
         self.vc = vc
         
-        let firstPortrait = URL(string: firstCandidate.imageString!)!
-        firstImageView.kf.setImage(with: firstPortrait)
-        
-        let secondPortrait = URL(string: secondCandidate.imageString!)!
-        secondImageView.kf.setImage(with: secondPortrait)
+//        let firstPortrait = URL(string: firstCandidate.imageString!)!
+//        firstImageView.kf.setImage(with: firstPortrait)
+//        
+//        let secondPortrait = URL(string: secondCandidate.imageString!)!
+//        secondImageView.kf.setImage(with: secondPortrait)
         
         _ = firstImageHolderView
         _ = firstImageView

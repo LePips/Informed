@@ -10,6 +10,10 @@ import UIKit
 
 struct Strings {
     
+    struct URL {
+        static let baseUrl = "https://informedweb.herokuapp.com/api/"
+    }
+    
     static let appName = "Informed"
     
     struct Common {

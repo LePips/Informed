@@ -23,10 +23,10 @@ struct ElectionState: State {
     var elections: [Election]
     var featuredElection: Election? = nil
     var nationalElections: [Election] {
-        return elections.filter { $0.category == .national }
+        return elections.filter { $0.type == .National }
     }
     var stateElections: [Election] {
-        return elections.filter { $0.category == .state }
+        return elections.filter { $0.type == .State }
     }
     
     typealias EventType = ElectionEventChange

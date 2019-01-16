@@ -9,78 +9,100 @@
 import UIKit
 import SharedPips
 
-enum ElectionCategory: String, Codable {
-    case national
-    case state
+enum ElectionType: String, Codable {
+    case National
+    case State
+    case None
 }
 
 struct Election: Codable {
     let title: String
-    let category: ElectionCategory
+    let id: Int
+    let type: ElectionType
     let coverImageUrl: String?
-    let dateOfElection: Date?
-    let electionID: Int
-    let info: [String: Info]
+    let imageUrls: [Int]?
+    let date: String
+    let candidates: [Int]
+    let sections: [[String: String]]
+    let lastEdited: String
     
     enum CodingKeys: String, CodingKey {
         case title = "title"
-        case category
-        case coverImageUrl
-        case dateOfElection
-        case electionID = "id"
-        case info
+        case id
+        case type
+        case coverImageUrl = "cover_image_url"
+        case imageUrls = "image_urls"
+        case date
+        case candidates
+        case sections
+        case lastEdited = "last_edited"
     }
     
     init(with decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.title = try container.decode(for: .title)
-        self.category = try container.decode(for: .category)
+        self.id = try container.decode(for: .id)
+        self.type = try container.decode(for: .type)
         self.coverImageUrl = try container.decode(for: .coverImageUrl)
-        self.dateOfElection = try container.decode(for: .dateOfElection)
-        self.electionID = try container.decode(for: .electionID)
-        self.info = try container.decode(for: .info)
+        self.imageUrls = try container.decode(for: .imageUrls)
+        self.date = try container.decode(for: .date)
+        self.candidates = try container.decode(for: .candidates)
+        self.sections = try container.decode(for: .sections)
+        self.lastEdited = try container.decode(for: .lastEdited)
     }
     
-    init(_ title: String, _ category: ElectionCategory, _ id: Int, _ coverImageUrl: String? = nil, _ date: Date? = nil) {
+    init(title: String, id: Int, type: ElectionType, coverImageUrl: String?, imageUrls: [Int]?, date: String, candidates: [Int], sections: [[String: String]], lastEdited: String) {
         self.title = title
-        self.category = category
+        self.id = id
+        self.type = type
         self.coverImageUrl = coverImageUrl
-        self.dateOfElection = date
-        self.electionID = id
-        self.info = [:]
+        self.imageUrls = imageUrls
+        self.date = date
+        self.candidates = candidates
+        self.sections = sections
+        self.lastEdited = lastEdited
     }
     
     static func single() -> Election {
-        let election = Election("Roman Caesar", .national, -1)
+        let election = Election(title: "1800 Presidential", id: 1, type: .National, coverImageUrl: nil, imageUrls: nil, date: "", candidates: [], sections: [], lastEdited: "")
         return election
     }
     
     static func getElections() {
-        Internet.GET(url: Firenet.elections, source: .firebase) { response in
-            
-            guard let data = response.value?.data else { return }
-
-            do {
-                let elections = try JSONDecoder().decode([Election].self, from: data)
-                ElectionState.core.fire(.fetchedAll(elections))
-            } catch {
-                print("error with election json parsing")
+        let url = Strings.URL.baseUrl + "elections/"
+        Internet.GET(url: url) { (response) in
+            if let error = response.error {
+                print(error)
+                return
+            }
+            if let value = response.value {
+                do {
+                    let key = value.json["elections"] as! [JSON]
+                    let electionData = try JSONSerialization.data(withJSONObject: key, options: .prettyPrinted)
+                    let elections = try JSONDecoder().decode([Election].self, from: electionData)
+                    ElectionState.core.fire(.fetchedAll(elections))
+                } catch {
+                    return
+                }
             }
         }
     }
     
-    static func getFeaturedElection() {
-        Internet.GET(url: Firenet.featuredElection) { response in
-            
-            guard let data = response.value?.data else { return }
-            
-            do {
-                let election = try JSONDecoder().decode(Election.self, from: data)
-                ElectionState.core.fire(.fetchedFeature(election))
-            } catch {
-                print("error with featured election parsing")
+    static func getElection(id: Int) {
+        let url = Strings.URL.baseUrl + "elections/\(id)"
+        Internet.GET(url: URL(string: url)!) { (response) in
+            if let error = response.error {
+                print(error)
+                return
             }
-            
+            if let value = response.value {
+                do {
+                    let candidate = try JSONDecoder().decode(Election.self, from: value.data)
+                    ElectionState.core.fire(.fetchedSingle(candidate))
+                } catch {
+                    return
+                }
+            }
         }
     }
 }

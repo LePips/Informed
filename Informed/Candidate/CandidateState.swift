@@ -10,7 +10,7 @@ import UIKit
 import SharedPips
 
 enum CandidateEventChange {
-    case fetchedAll
+    case fetchedAll([Candidate])
     case fetchedSingle(Candidate)
 }
 
@@ -30,7 +30,8 @@ struct CandidateState: State {
     
     mutating func respond(to event: CandidateEventChange) {
         switch event {
-        case .fetchedAll: ()
+        case .fetchedAll(let candidates):
+            self.candidates += candidates
         case .fetchedSingle(let candidate):
             self.candidates.append(candidate)
         }

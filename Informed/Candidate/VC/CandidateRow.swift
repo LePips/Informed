@@ -19,14 +19,14 @@ extension CandidateRow {
     static func buildRows(candidate: Candidate) -> [CandidateRow] {
         var rows = [CandidateRow]()
         
-        let picture = CandidateRow.picture(candidate.imageString)
+        let picture = CandidateRow.picture(candidate.coverImageString)
         rows.append(picture)
         
-        let name = CandidateRow.name(candidate.name)
-        rows.append(name)
-        
-        let bio = CandidateRow.bio(candidate.bio)
-        rows.append(bio)
+//        let name = CandidateRow.name(candidate.name)
+//        rows.append(name)
+//        
+//        let bio = CandidateRow.bio(candidate.bio)
+//        rows.append(bio)
         
         return rows
     }
