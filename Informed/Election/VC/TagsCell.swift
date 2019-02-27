@@ -14,12 +14,12 @@ class TagsCell: BasicTableViewCell {
         return 40
     }
     
-    func configure() {
+    func configure(left: String, right: String) {
         _ = leftTag
         _ = rightTag
         
-        leftTag.text = "National"
-        rightTag.text = "Featured"
+        leftTag.text = left
+        rightTag.text = right
         
     }
     

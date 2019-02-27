@@ -12,6 +12,7 @@ import SharedPips
 enum OptionRow {
     case about
     case requestInfo
+    case settings
     
     static var height: CGFloat = 55
     
@@ -21,6 +22,8 @@ enum OptionRow {
             return AboutViewController()
         case .requestInfo:
             return RequestInfoViewController()
+        case .settings:
+            return SettingsViewController()
         }
     }
 }
@@ -30,7 +33,7 @@ class OptionTableViewHandler {
     private(set) var rows: [OptionRow] = []
     
     func buildRows() {
-        rows = [.about, .requestInfo]
+        rows = [.about, .requestInfo, .settings]
     }
     
     static func configure(_ tableView: UITableView) {
@@ -58,6 +61,12 @@ class OptionTableViewHandler {
             let cell = tableView.dequeueReusableCell(withIdentifier: SideSheetOptionViewCell.identifier, for: path) as! SideSheetOptionViewCell
             let image = UIImage.named("Request Info")
             let title = "Request Info"
+            cell.configure(with: image, title: title)
+            return cell
+        case .settings:
+            let cell = tableView.dequeueReusableCell(withIdentifier: SideSheetOptionViewCell.identifier, for: path) as! SideSheetOptionViewCell
+            let image = UIImage.named("Request Info")
+            let title = "Settings"
             cell.configure(with: image, title: title)
             return cell
         }

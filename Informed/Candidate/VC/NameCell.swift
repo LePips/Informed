@@ -9,28 +9,32 @@
 import UIKit
 import SharedPips
 
-class NameCell: BasicTableViewCell {
+class NameCell: BasicTableViewCell, NeededHeight {
     
-    static var neededHeight: CGFloat {
-        return 30
+    private lazy var nameLabel: UILabel = makeNameLabel()
+    
+    override func setupSubviews() {
+        addSubview(nameLabel)
+        self.backgroundColor = .black
     }
     
-    func configure(with name: String) {
-        _ = nameLabel
-        
-        self.nameLabel.text = name
+    override func setupLayoutConstraints() {
+        NSLayoutConstraint.activate([
+            nameLabel.centerXAnchor ⩵ centerXAnchor,
+            nameLabel.centerYAnchor ⩵ centerYAnchor
+            ])
     }
     
-    private lazy var nameLabel: UILabel = self._nameLabel()
-    private func _nameLabel() -> UILabel {
+    static var neededHeight: CGFloat = 60
+    
+    func configure(with candidate: Candidate) {
+        self.nameLabel.text = candidate.fullName
+    }
+    
+    private func makeNameLabel() -> UILabel {
         let nameLabel = UILabel.forAutoLayout()
-        
-        contentView.embed(nameLabel)
-        
-        nameLabel.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
-        nameLabel.text = ""
-        nameLabel.textColor = .black
-        
+        nameLabel.font = UIFont.systemFont(ofSize: 42, weight: .semibold)
+        nameLabel.textColor = UIColor.Informed.Text.white
         return nameLabel
     }
 }

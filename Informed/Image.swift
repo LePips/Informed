@@ -9,7 +9,6 @@
 import UIKit
 
 struct Images {
-    
     static let menu = UIImage.named("Menu")
     static let home = UIImage.named("Home")
     static let requestInfo = UIImage.named("Request Info")

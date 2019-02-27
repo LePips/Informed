@@ -11,6 +11,17 @@ import SharedPips
 
 class AnnouncementViewController: UIViewController {
     
+    private var announcement: Announcement
+    
+    init(announcement: Announcement) {
+        self.announcement = announcement
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private lazy var messageLabel: UILabel = self._message()
     private func _message() -> UILabel {
         let message = UILabel.forAutoLayout()
@@ -61,15 +72,8 @@ extension AnnouncementViewController {
         _ = messageLabel
         _ = dismissButton
         
-        AnnouncementState.core.addSubscriber(subscriber: self, update: AnnouncementViewController.update)
+        messageLabel.text = announcement.announcement
         
         view.backgroundColor = UIColor.Material.amber100
-        
-    }
-}
-
-extension AnnouncementViewController: Subscriber {
-    func update(with state: AnnouncementState) {
-        messageLabel.text = state.announcement?.message
     }
 }

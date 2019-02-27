@@ -9,13 +9,9 @@
 import UIKit
 import SharedPips
 
-class PictureCell: BasicTableViewCell {
+class PictureCell: BasicTableViewCell, NeededHeight {
     
-    let parallaxFactor: CGFloat = 70
-    
-    static var neededHeight: CGFloat {
-        return 250
-    }
+    static var neededHeight: CGFloat = 475
     
     func configure(with imageString: String?) {
         _ = picture
@@ -25,6 +21,16 @@ class PictureCell: BasicTableViewCell {
         }
         
         clipsToBounds = true
+        setGradient()
+        self.backgroundColor = .black
+    }
+    
+    private func setGradient() {
+        let gradient = CAGradientLayer()
+        gradient.frame = self.bounds
+        gradient.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
+        gradient.locations = [0.8, 1]
+        picture.layer.mask = gradient
     }
     
     private lazy var picture: UIImageView = self._picture()
@@ -33,7 +39,7 @@ class PictureCell: BasicTableViewCell {
         
         contentView.addSubview(picture)
         NSLayoutConstraint.activate([
-            picture.bottomAnchor ⩵ contentView.bottomAnchor + (2 * parallaxFactor),
+            picture.bottomAnchor ⩵ contentView.bottomAnchor,
             picture.leftAnchor ⩵ contentView.leftAnchor,
             picture.rightAnchor ⩵ contentView.rightAnchor,
             picture.topAnchor ⩵ contentView.topAnchor
@@ -42,20 +48,8 @@ class PictureCell: BasicTableViewCell {
         picture.image = UIImage()
 
         picture.clipsToBounds = true
-//        picture.layer.cornerRadius = 12
-//        picture.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+        picture.contentMode = .scaleAspectFill
         
         return picture
-    }
-    
-    func setBackgroundOffset(offset: CGFloat) {
-//        let boundOffset = max(0, min(1, offset))
-//        let pixelOffset = (1 - boundOffset) * 2 * parallaxFactor
-//        picture.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -pixelOffset)
-//        picture.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: pixelOffset)
-//
-//        UIView.animate(withDuration: 0.1) {
-//            self.contentView.layoutIfNeeded()
-//        }
     }
 }

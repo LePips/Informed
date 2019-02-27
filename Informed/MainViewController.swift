@@ -23,4 +23,21 @@ class MainViewController: UINavigationController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.lightContent
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        AnnouncementState.core.addSubscriber(subscriber: self, update: MainViewController.update)
+        
+    }
+}
+
+extension MainViewController: Subscriber {
+    func update(with state: AnnouncementState) {
+        if !state.announcements.isEmpty {
+            let announcement = state.announcements[0]
+            let vc = AnnouncementViewController(announcement: announcement)
+            self.present(vc, animated: true)
+        }
+    }
 }

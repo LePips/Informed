@@ -7,61 +7,48 @@
 //
 
 import UIKit
-import SharedPips
-
-typealias Tag = (String, String?)
 
 enum ElectionRow {
     case picture(String?)
-    case tags
+    case tags(String, String)
     case header(String)
     case divider
-    case date
+    case date(String)
     case description(Description)
     case info(Info)
     case requestInfo
-    
-    var expandable: Bool {
-        switch self {
-        default:
-            return false
-        }
-    }
-    
-    var selectable: Bool {
-        switch self {
-        case .requestInfo, .info, .date:
-            return true
-        default:
-            return false
-        }
-    }
+    case candidates([Int])
 }
 
 extension ElectionRow {
     static func buildRows(election: Election) -> [ElectionRow] {
         var electionRows = [ElectionRow]()
         
-        let url = election.coverImageUrl
-        let pictureRow = ElectionRow.picture(url)
-        electionRows.append(pictureRow)
+        if let url = election.coverImageUrl {
+            let pictureRow = ElectionRow.picture(url)
+            electionRows.append(pictureRow)
+        }
         
-        let tagsRow = ElectionRow.tags
+        let tagsRow = ElectionRow.tags(election.type.rawValue, "")
         electionRows.append(tagsRow)
         
         let title = election.title
         let headerRow = ElectionRow.header(title)
         electionRows.append(headerRow)
         
-//        electionRows.append(.divider)
-        
-        let date = ElectionRow.date
+        let date = ElectionRow.date(election.date)
         electionRows.append(date)
         
         electionRows.append(.divider)
         
-        electionRows.append(.divider)
-        electionRows.append(.requestInfo)
+        for section in election.sections {
+            for (key, value) in section {
+                let info = Info(title: key, content: value)
+                electionRows.append(.info(info))
+            }
+        }
+        
+        electionRows.append(.candidates(election.candidates))
         
         return electionRows
     }
@@ -77,6 +64,7 @@ extension ElectionRow {
         tableView.register(DescriptionCell.self, forCellReuseIdentifier: DescriptionCell.identifier)
         tableView.register(InfoCell.self, forCellReuseIdentifier: InfoCell.identifier)
         tableView.register(RequestInfoCell.self, forCellReuseIdentifier: RequestInfoCell.identifier)
+        tableView.register(CandidateCarouselCell.self, forCellReuseIdentifier: CandidateCarouselCell.identifier)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
@@ -98,26 +86,28 @@ extension ElectionRow {
             return DescriptionCell.neededHeight
         case .requestInfo:
             return RequestInfoCell.neededHeight
+        case .candidates:
+            return CandidateCarouselCell.neededHeight
         }
     }
     
-    func cell(for path: IndexPath, in tableView: UITableView) -> UITableViewCell {
+    func cell(for path: IndexPath, in tableView: UITableView, delegate: CandidateCourselViewDelegate) -> UITableViewCell {
         switch self {
         case .picture(let url):
             let cell = tableView.dequeueReusableCell(withIdentifier: PictureCell.identifier, for: path) as! PictureCell
             cell.configure(with: url)
             return cell
-        case .tags:
+        case .tags(let left, let right):
             let cell = tableView.dequeueReusableCell(withIdentifier: TagsCell.identifier, for: path) as! TagsCell
-            cell.configure()
+            cell.configure(left: left, right: right)
             return cell
         case .divider:
             let cell = tableView.dequeueReusableCell(withIdentifier: DividerCell.identifier, for: path) as! DividerCell
             cell.configure()
             return cell
-        case .date:
+        case .date(let date):
             let cell = tableView.dequeueReusableCell(withIdentifier: DateCell.identifier, for: path) as! DateCell
-            cell.configure()
+            cell.configure(with: date)
             return cell
         case .header(let title):
             let cell = tableView.dequeueReusableCell(withIdentifier: TitleCell.identifier, for: path) as! TitleCell
@@ -134,6 +124,10 @@ extension ElectionRow {
         case .requestInfo:
             let cell = tableView.dequeueReusableCell(withIdentifier: RequestInfoCell.identifier, for: path) as! RequestInfoCell
             cell.configure()
+            return cell
+        case .candidates(let ids):
+            let cell = tableView.dequeueReusableCell(withIdentifier: CandidateCarouselCell.identifier, for: path) as! CandidateCarouselCell
+            cell.configure(with: ids, delegate: delegate)
             return cell
         }
     }

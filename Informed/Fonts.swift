@@ -9,9 +9,7 @@
 import UIKit
 
 struct Fonts {
-    
     static func myungjo(size: CGFloat) -> UIFont {
         return UIFont(name: "AppleMyungjo", size: size)!
     }
-    
 }

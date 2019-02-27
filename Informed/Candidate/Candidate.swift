@@ -24,15 +24,20 @@ struct Candidate: Codable {
     let type: CandidateType
     let elections: [Int]
     let sections: [[String: String]]
+    let party: String
+    var fullName: String {
+        return first + " " + last
+    }
     
     enum CodingKeys: String, CodingKey {
         case first
         case last
-        case coverImageString = "cover_image_string"
+        case coverImageString = "cover_image_url"
         case imageUrls = "image_urls"
         case type
         case elections
         case sections
+        case party
     }
 
     init(from decoder: Decoder) throws {
@@ -44,9 +49,10 @@ struct Candidate: Codable {
         self.type = try container.decode(for: .type)
         self.elections = try container.decode(for: .elections)
         self.sections = try container.decode(for: .sections)
+        self.party = try container.decode(for: .party)
     }
     
-    init(first: String, last: String, coverImageString: String? = nil, imageUrls: [String]? = nil, type: CandidateType, elections: [Int], sections: [[String: String]]) {
+    init(first: String, last: String, coverImageString: String? = nil, imageUrls: [String]? = nil, type: CandidateType, elections: [Int], sections: [[String: String]], party: String) {
         self.first = first
         self.last = last
         self.coverImageString = coverImageString
@@ -54,14 +60,27 @@ struct Candidate: Codable {
         self.type = type
         self.elections = elections
         self.sections = sections
+        self.party = party
     }
     
     static func empty() -> Candidate {
-        return Candidate(first: "", last: "", type: .None, elections: [], sections: [[:]])
+        return Candidate(first: "", last: "", type: .None, elections: [], sections: [[:]], party: "")
     }
     
-    static func getCandidates() {
-        let url = Strings.URL.baseUrl + "candidates/"
+    func getElections(completion: @escaping ([Election]) -> ()) {
+        Election.getElections(elections) { (elections) in
+            completion(elections)
+        }
+    }
+    
+    static func getCandidates(_ ids: [Int] = [], completion: @escaping ([Candidate]) -> Void) {
+        var url = Strings.URL.baseUrl + "candidates/"
+        if !ids.isEmpty {
+            url += "?ids="
+            for id in ids {
+                url += String(describing: id) + ","
+            }
+        }
         Internet.GET(url: URL(string: url)!) { (response) in
             if let error = response.error {
                 print(error)
@@ -72,7 +91,7 @@ struct Candidate: Codable {
                     let key = value.json["candidates"] as! [JSON]
                     let candidateData = try JSONSerialization.data(withJSONObject: key, options: .prettyPrinted)
                     let candidates = try JSONDecoder().decode([Candidate].self, from: candidateData)
-                    CandidateState.core.fire(.fetchedAll(candidates))
+                    completion(candidates)
                 } catch {
                     return
                 }
@@ -80,7 +99,7 @@ struct Candidate: Codable {
         }
     }
     
-    static func getCandidate(id: Int) {
+    static func getCandidate(id: Int, completion: @escaping (Candidate) -> Void) {
         let url = Strings.URL.baseUrl + "candidates/\(id)"
         Internet.GET(url: URL(string: url)!) { (response) in
             if let error = response.error {
@@ -90,7 +109,7 @@ struct Candidate: Codable {
             if let value = response.value {
                 do {
                     let candidate = try JSONDecoder().decode(Candidate.self, from: value.data)
-                    CandidateState.core.fire(.fetchedSingle(candidate))
+                    completion(candidate)
                 } catch {
                     return
                 }

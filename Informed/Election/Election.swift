@@ -68,8 +68,14 @@ struct Election: Codable {
         return election
     }
     
-    static func getElections() {
-        let url = Strings.URL.baseUrl + "elections/"
+    static func getElections(_ ids: [Int] = [], completion: @escaping ([Election]) -> Void) {
+        var url = Strings.URL.baseUrl + "elections/"
+        if !ids.isEmpty {
+            url += "?ids="
+            for id in ids {
+                url += String(describing: id) + ","
+            }
+        }
         Internet.GET(url: url) { (response) in
             if let error = response.error {
                 print(error)
@@ -80,7 +86,7 @@ struct Election: Codable {
                     let key = value.json["elections"] as! [JSON]
                     let electionData = try JSONSerialization.data(withJSONObject: key, options: .prettyPrinted)
                     let elections = try JSONDecoder().decode([Election].self, from: electionData)
-                    ElectionState.core.fire(.fetchedAll(elections))
+                    completion(elections)
                 } catch {
                     return
                 }
@@ -88,7 +94,7 @@ struct Election: Codable {
         }
     }
     
-    static func getElection(id: Int) {
+    static func getElection(id: Int, completion: @escaping (Election) -> Void) {
         let url = Strings.URL.baseUrl + "elections/\(id)"
         Internet.GET(url: URL(string: url)!) { (response) in
             if let error = response.error {
@@ -97,12 +103,19 @@ struct Election: Codable {
             }
             if let value = response.value {
                 do {
-                    let candidate = try JSONDecoder().decode(Election.self, from: value.data)
-                    ElectionState.core.fire(.fetchedSingle(candidate))
+                    let election = try JSONDecoder().decode(Election.self, from: value.data)
+                    completion(election)
                 } catch {
                     return
                 }
             }
+        }
+    }
+    
+    static func refreshElection(id: Int, completion: @escaping (Election) -> ()) {
+        Election.getElection(id: id) { (election) in
+            ElectionState.core.fire(.refreshedSingle(election))
+            completion(election)
         }
     }
 }

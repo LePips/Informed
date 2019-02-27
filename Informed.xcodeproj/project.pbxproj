@@ -44,6 +44,10 @@
 		5F2C9DC221557F10005F9A55 /* LoginDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2C9DC121557F10005F9A55 /* LoginDelegates.swift */; };
 		5F2C9DC421557F2C005F9A55 /* LoginErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2C9DC321557F2C005F9A55 /* LoginErrorHandler.swift */; };
 		5F5EC81520CAEE2200D77C2A /* NameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5EC81420CAEE2200D77C2A /* NameCell.swift */; };
+		5F6D4E49222743B300591A63 /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F6D4E48222743B300591A63 /* News.swift */; };
+		5F6D4E4B222743B900591A63 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F6D4E4A222743B900591A63 /* Article.swift */; };
+		5F6D4E4D22274A9200591A63 /* NewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F6D4E4C22274A9200591A63 /* NewsCell.swift */; };
+		5F6D4E4F22274B0900591A63 /* ArticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F6D4E4E22274B0900591A63 /* ArticleView.swift */; };
 		5F70D9C2214F31AE00CF0C2B /* SearchTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F70D9C1214F31AE00CF0C2B /* SearchTableView.swift */; };
 		5F7111D921D864F8005825DA /* gRPC-C++.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7111D021D864F7005825DA /* gRPC-C++.framework */; };
 		5F7111DA21D864F8005825DA /* BoringSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F7111D121D864F7005825DA /* BoringSSL.framework */; };
@@ -90,7 +94,9 @@
 		5FA3D41B2149E629001EFFA9 /* GTMSessionFetcher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FA3D4192149E629001EFFA9 /* GTMSessionFetcher.framework */; };
 		5FA3D41C2149E629001EFFA9 /* FirebaseAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FA3D41A2149E629001EFFA9 /* FirebaseAuth.framework */; };
 		5FB6E400219F38E100930E43 /* PopAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB6E3FF219F38E100930E43 /* PopAnimator.swift */; };
+		5FB9D95D21FA2F9F009D3121 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB9D95C21FA2F9F009D3121 /* SettingsViewController.swift */; };
 		5FB9EED020F59524003022E9 /* CandidateState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB9EECF20F59524003022E9 /* CandidateState.swift */; };
+		5FBEABC421F7C84B00EBCF14 /* CandidateCarouselCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBEABC321F7C84B00EBCF14 /* CandidateCarouselCell.swift */; };
 		5FC4F78921ACF90800006E28 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC4F78821ACF90800006E28 /* Image.swift */; };
 		5FCCC74220F015470008228E /* TitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCCC74120F015470008228E /* TitleCell.swift */; };
 		5FCCC74420F016C90008228E /* ElectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCCC74320F016C90008228E /* ElectionRow.swift */; };
@@ -104,6 +110,9 @@
 		5FE6B5D02140204800A4DEB3 /* NationalElectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE6B5CF2140204800A4DEB3 /* NationalElectionRow.swift */; };
 		5FE6B5D22140205100A4DEB3 /* StateElectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE6B5D12140205100A4DEB3 /* StateElectionRow.swift */; };
 		5FE6B5D42140205600A4DEB3 /* LocalElectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE6B5D32140205600A4DEB3 /* LocalElectionRow.swift */; };
+		5FF36DB82221F45E0049AE1A /* CurrentPositionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF36DB72221F45E0049AE1A /* CurrentPositionCell.swift */; };
+		5FF36DBA2221F6620049AE1A /* AttributeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF36DB92221F6620049AE1A /* AttributeCell.swift */; };
+		5FF36DBC222218CD0049AE1A /* CandidateElectionsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF36DBB222218CD0049AE1A /* CandidateElectionsCell.swift */; };
 		5FF42066219FCD5E00FD0CDE /* AppleMyungjo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5FF42065219FCCCA00FD0CDE /* AppleMyungjo.ttf */; };
 		5FF42068219FD05700FD0CDE /* SectionTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF42067219FD05700FD0CDE /* SectionTitleCell.swift */; };
 		5FF4206D21A07DA100FD0CDE /* SideSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF4206C21A07DA100FD0CDE /* SideSheetViewController.swift */; };
@@ -168,6 +177,10 @@
 		5F2C9DC121557F10005F9A55 /* LoginDelegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginDelegates.swift; sourceTree = "<group>"; };
 		5F2C9DC321557F2C005F9A55 /* LoginErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrorHandler.swift; sourceTree = "<group>"; };
 		5F5EC81420CAEE2200D77C2A /* NameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameCell.swift; sourceTree = "<group>"; };
+		5F6D4E48222743B300591A63 /* News.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = News.swift; sourceTree = "<group>"; };
+		5F6D4E4A222743B900591A63 /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
+		5F6D4E4C22274A9200591A63 /* NewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCell.swift; sourceTree = "<group>"; };
+		5F6D4E4E22274B0900591A63 /* ArticleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleView.swift; sourceTree = "<group>"; };
 		5F70D9C1214F31AE00CF0C2B /* SearchTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableView.swift; sourceTree = "<group>"; };
 		5F7111D021D864F7005825DA /* gRPC-C++.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "gRPC-C++.framework"; sourceTree = "<group>"; };
 		5F7111D121D864F7005825DA /* BoringSSL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BoringSSL.framework; sourceTree = "<group>"; };
@@ -216,7 +229,9 @@
 		5FA3D4192149E629001EFFA9 /* GTMSessionFetcher.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GTMSessionFetcher.framework; sourceTree = "<group>"; };
 		5FA3D41A2149E629001EFFA9 /* FirebaseAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseAuth.framework; sourceTree = "<group>"; };
 		5FB6E3FF219F38E100930E43 /* PopAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopAnimator.swift; sourceTree = "<group>"; };
+		5FB9D95C21FA2F9F009D3121 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		5FB9EECF20F59524003022E9 /* CandidateState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateState.swift; sourceTree = "<group>"; };
+		5FBEABC321F7C84B00EBCF14 /* CandidateCarouselCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateCarouselCell.swift; sourceTree = "<group>"; };
 		5FC4F78821ACF90800006E28 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		5FCCC74120F015470008228E /* TitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleCell.swift; sourceTree = "<group>"; };
 		5FCCC74320F016C90008228E /* ElectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectionRow.swift; sourceTree = "<group>"; };
@@ -233,6 +248,9 @@
 		5FE6B5CF2140204800A4DEB3 /* NationalElectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NationalElectionRow.swift; sourceTree = "<group>"; };
 		5FE6B5D12140205100A4DEB3 /* StateElectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateElectionRow.swift; sourceTree = "<group>"; };
 		5FE6B5D32140205600A4DEB3 /* LocalElectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalElectionRow.swift; sourceTree = "<group>"; };
+		5FF36DB72221F45E0049AE1A /* CurrentPositionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentPositionCell.swift; sourceTree = "<group>"; };
+		5FF36DB92221F6620049AE1A /* AttributeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeCell.swift; sourceTree = "<group>"; };
+		5FF36DBB222218CD0049AE1A /* CandidateElectionsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateElectionsCell.swift; sourceTree = "<group>"; };
 		5FF42065219FCCCA00FD0CDE /* AppleMyungjo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AppleMyungjo.ttf; sourceTree = "<group>"; };
 		5FF42067219FD05700FD0CDE /* SectionTitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionTitleCell.swift; sourceTree = "<group>"; };
 		5FF4206C21A07DA100FD0CDE /* SideSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideSheetViewController.swift; sourceTree = "<group>"; };
@@ -303,6 +321,7 @@
 				5F70D9C1214F31AE00CF0C2B /* SearchTableView.swift */,
 				5FF42069219FD55E00FD0CDE /* Phase out-old views */,
 				5F5A6E902141D8FB007F8CF6 /* Election Sections */,
+				5FB9D95C21FA2F9F009D3121 /* SettingsViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -416,6 +435,8 @@
 				5FF420AF21A1526A00FD0CDE /* Strings.swift */,
 				5FC4F78821ACF90800006E28 /* Image.swift */,
 				5F7DFA6821A4B9A200D58C08 /* Fonts.swift */,
+				5F6D4E48222743B300591A63 /* News.swift */,
+				5F6D4E4A222743B900591A63 /* Article.swift */,
 				5FF420AC21A1497D00FD0CDE /* About */,
 				5F200B0420CB364700FAEA51 /* Home */,
 				5F2C9DC521557F43005F9A55 /* Login */,
@@ -458,8 +479,13 @@
 			isa = PBXGroup;
 			children = (
 				5F7F76A520C9F8E0003FC0C6 /* CandidateViewController.swift */,
-				5F5EC81420CAEE2200D77C2A /* NameCell.swift */,
 				5F7F76AC20C9F9A2003FC0C6 /* CandidateRow.swift */,
+				5F5EC81420CAEE2200D77C2A /* NameCell.swift */,
+				5F6D4E4C22274A9200591A63 /* NewsCell.swift */,
+				5F6D4E4E22274B0900591A63 /* ArticleView.swift */,
+				5FF36DBB222218CD0049AE1A /* CandidateElectionsCell.swift */,
+				5FF36DB72221F45E0049AE1A /* CurrentPositionCell.swift */,
+				5FF36DB92221F6620049AE1A /* AttributeCell.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -469,6 +495,7 @@
 			children = (
 				5F7F76A320C9F8C5003FC0C6 /* ElectionViewController.swift */,
 				5FCCC74320F016C90008228E /* ElectionRow.swift */,
+				5FBEABC321F7C84B00EBCF14 /* CandidateCarouselCell.swift */,
 				5F7F76AE20C9FA11003FC0C6 /* PictureCell.swift */,
 				5F039C56215BFE4000FC1B58 /* TagsCell.swift */,
 				5FCCC74120F015470008228E /* TitleCell.swift */,
@@ -666,6 +693,8 @@
 				5F7F769C20C9F3AF003FC0C6 /* Election.swift in Sources */,
 				5F200AF720CB2A1D00FAEA51 /* ElectionState.swift in Sources */,
 				5F7E5265215D7532005C3082 /* OtherCell.swift in Sources */,
+				5F6D4E4B222743B900591A63 /* Article.swift in Sources */,
+				5FF36DBC222218CD0049AE1A /* CandidateElectionsCell.swift in Sources */,
 				5F039C5F215C0F8600FC1B58 /* InfoCell.swift in Sources */,
 				5FE6B5D22140205100A4DEB3 /* StateElectionRow.swift in Sources */,
 				5F18B6D121974BE70060E2DE /* HomeTableViewHandler.swift in Sources */,
@@ -674,7 +703,10 @@
 				5F5EC81520CAEE2200D77C2A /* NameCell.swift in Sources */,
 				5FF420AB21A1496300FD0CDE /* AboutViewController.swift in Sources */,
 				5F70D9C2214F31AE00CF0C2B /* SearchTableView.swift in Sources */,
+				5FF36DB82221F45E0049AE1A /* CurrentPositionCell.swift in Sources */,
+				5F6D4E49222743B300591A63 /* News.swift in Sources */,
 				5FD244DA2139829C00ECFE87 /* LargeTitleHeader.swift in Sources */,
+				5FB9D95D21FA2F9F009D3121 /* SettingsViewController.swift in Sources */,
 				5F110C75217AC60800FD70C3 /* RequestInfoQuestionRow.swift in Sources */,
 				5F039C57215BFE4000FC1B58 /* TagsCell.swift in Sources */,
 				5F7F76AF20C9FA11003FC0C6 /* PictureCell.swift in Sources */,
@@ -690,6 +722,7 @@
 				5F200B0220CB356700FAEA51 /* User.swift in Sources */,
 				5F039C5B215C029300FC1B58 /* DividerCell.swift in Sources */,
 				5F7F76A420C9F8C5003FC0C6 /* ElectionViewController.swift in Sources */,
+				5F6D4E4F22274B0900591A63 /* ArticleView.swift in Sources */,
 				5F7F76A020C9F3FA003FC0C6 /* Party.swift in Sources */,
 				5FCCC74420F016C90008228E /* ElectionRow.swift in Sources */,
 				5F200B1720CB92CA00FAEA51 /* MainViewController.swift in Sources */,
@@ -701,15 +734,18 @@
 				5F7F769E20C9F3B9003FC0C6 /* Candidate.swift in Sources */,
 				5F7BFD312151A77800E43854 /* Description.swift in Sources */,
 				5F7F769420C9F37E003FC0C6 /* ElectionCard.swift in Sources */,
+				5FBEABC421F7C84B00EBCF14 /* CandidateCarouselCell.swift in Sources */,
 				5FE6B5CE2140204100A4DEB3 /* WatchingElectionRow.swift in Sources */,
 				5F7D3E6421517212000E7844 /* UserState.swift in Sources */,
 				5FD55D742130DFB30049EF7E /* LargeCardCell.swift in Sources */,
 				5FF4208F21A098BF00FD0CDE /* SideSheetOptionViewCell.swift in Sources */,
+				5FF36DBA2221F6620049AE1A /* AttributeCell.swift in Sources */,
 				5FCCC74220F015470008228E /* TitleCell.swift in Sources */,
 				5F22ED8D20CB25C300668ADE /* ProfileViewController.swift in Sources */,
 				5F77880D2150926A00AFE7BC /* LoginViewController.swift in Sources */,
 				5F039C59215BFE4B00FC1B58 /* DateCell.swift in Sources */,
 				5F2C9DC221557F10005F9A55 /* LoginDelegates.swift in Sources */,
+				5F6D4E4D22274A9200591A63 /* NewsCell.swift in Sources */,
 				5FE6B5D02140204800A4DEB3 /* NationalElectionRow.swift in Sources */,
 				5F110C79217AC8DA00FD70C3 /* MainRequestInfoViewController.swift in Sources */,
 				5FF420AE21A149AB00FD0CDE /* SideSheetDrawerView.swift in Sources */,
@@ -884,7 +920,7 @@
 					"$(PROJECT_DIR)/Informed/Supporting\\ Files",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Informed/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -921,7 +957,7 @@
 					"$(PROJECT_DIR)/Informed/Supporting\\ Files",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Informed/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

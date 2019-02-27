@@ -14,22 +14,56 @@ fileprivate let announcementStateDefaults = UserDefaults(suiteName: "informed.an
 
 struct Announcement: Codable {
     
-    var broadcast: Bool
-    var message: String
-    var version: Int
+    var announcement: String
+    var dateCreated: String
+    private var showOnLaunch: Bool
+    var active: Bool
+    var shouldShowOnLaunch: Bool {
+        return showOnLaunch && active
+    }
     
-    static func getAnnouncement() {
-
+    enum CodingKeys: String, CodingKey {
+        case announcement
+        case dateCreated = "date_created"
+        case showOnLaunch = "show_on_launch"
+        case active
+    }
+    
+    init(with decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.announcement = try container.decode(for: .announcement)
+        self.dateCreated = try container.decode(for: .dateCreated)
+        self.showOnLaunch = try container.decode(for: .showOnLaunch)
+        self.active = try container.decode(for: .active)
+    }
+    
+    static func getAnnouncements() {
+        let url = Strings.URL.baseUrl + "announcements/"
+        Internet.GET(url: url) { (response) in
+            if let error = response.error {
+                print(error)
+                return
+            }
+            if let value = response.value {
+                do {
+                    let key = value.json["announcements"] as! [JSON]
+                    let announcementData = try JSONSerialization.data(withJSONObject: key, options: .prettyPrinted)
+                    let announcements = try JSONDecoder().decode([Announcement].self, from: announcementData)
+                    AnnouncementState.core.fire(.fetchedAll(announcements))
+                } catch {
+                    return
+                }
+            }
+        }
     }
     
     func shouldBroadcast() -> Bool {
-        guard let value = AnnouncementState.core.state.announcement?.version else { return false }
-        return value <= 2
+        return false
     }
 }
 
 enum AnnouncementChange {
-    case fetched(Announcement)
+    case fetchedAll([Announcement])
 }
 
 private let sharedCore: Core<AnnouncementState> = {
@@ -38,20 +72,7 @@ private let sharedCore: Core<AnnouncementState> = {
 
 struct AnnouncementState: State {
     
-    var announcement: Announcement? = nil {
-        didSet {
-            var data: Data? = nil
-            if let version = announcement?.version {
-                do {
-                    let encoder = JSONEncoder()
-                    data = try encoder.encode(version)
-                } catch {
-                    print("announcement version encoding error: \(error)")
-                }
-            }
-            announcementStateDefaults?.set(data, forKey: announcementDefaultKey)
-        }
-    }
+    var announcements: [Announcement] = []
     
     typealias EventType = AnnouncementChange
     
@@ -61,12 +82,12 @@ struct AnnouncementState: State {
     
     mutating func respond(to event: AnnouncementChange) {
         switch event {
-        case .fetched(let announcement):
-            self.announcement = announcement
+        case .fetchedAll(let announcements):
+            self.announcements = announcements
         }
     }
     
     static func emptyState() -> AnnouncementState {
-        return AnnouncementState(announcement: nil)
+        return AnnouncementState()
     }
 }

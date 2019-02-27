@@ -22,9 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = MainViewController()
         FirebaseApp.configure()
         
-        Election.getElections()
-        Election.getElection(id: 1)
-        
         return true
     }
 }

@@ -8,11 +8,32 @@
 
 import UIKit
 import SharedPips
+import SafariServices
 
-class CandidateViewController: UIViewController {
+class CandidateViewController: BasicViewController {
     
-    let candidate: Candidate!
-    var rows = [CandidateRow]()
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    private let candidate: Candidate
+    private var rows: [CandidateRow] = []
+    private lazy var tableView: UITableView = makeTableView()
+    private lazy var backButton = makeBackButton()
+    
+    override func setupSubviews() {
+        view.embed(tableView)
+        view.addSubview(backButton)
+    }
+    
+    override func setupLayoutConstraints() {
+        NSLayoutConstraint.activate([
+            backButton.topAnchor ⩵ view.safeAreaLayoutGuide.topAnchor + 15,
+            backButton.leftAnchor ⩵ view.leftAnchor + 15,
+            backButton.widthAnchor ⩵ 35,
+            backButton.heightAnchor ⩵ 35
+            ])
+    }
     
     init(with candidate: Candidate) {
         self.candidate = candidate
@@ -23,61 +44,48 @@ class CandidateViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var tableView: UITableView = self._tableView()
-    private func _tableView() -> UITableView {
+    private func makeTableView() -> UITableView {
         let tableView = UITableView.forAutoLayout()
-        
-        view.embed(tableView)
-        
         CandidateRow.configure(tableView)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
-        
+        tableView.backgroundColor = .black
         return tableView
     }
     
-    private lazy var closeButton: UIButton = self._closeButton()
-    private func _closeButton() -> UIButton {
-        let closeButton = UIButton.forAutoLayout()
-        
-        let bounds: CGFloat = 60
-        view.addSubview(closeButton)
-        NSLayoutConstraint.activate([
-            closeButton.centerXAnchor ⩵ view.centerXAnchor,
-            closeButton.bottomAnchor ⩵ view.bottomAnchor - 20,
-            closeButton.widthAnchor ⩵ bounds,
-            closeButton.heightAnchor ⩵ bounds
-            ])
-        
-        closeButton.setTitle("", for: .normal)
-        closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
-        closeButton.layer.cornerRadius = bounds / 2
-        closeButton.backgroundColor = UIColor.Material.red100
-        
-        return closeButton
+    private func makeBackButton() -> UIButton {
+        let button = UIButton.forAutoLayout()
+        button.addTarget(self, action: #selector(back), for: .touchUpInside)
+        button.setImage(UIImage.vector("Left"), for: .normal)
+        button.setTitle("", for: .normal)
+        button.backgroundColor = .white
+        return button
     }
     
-    @objc private func close() {
-        dismiss(animated: true, completion: nil)
+    @objc private func back() {
+        navigationController?.popViewController(animated: true)
     }
 }
 
 // MARK: -
 // MARK: lifecycle
 extension CandidateViewController {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        CandidateState.core.addSubscriber(subscriber: self, update: CandidateViewController.update)
-        
         self.rows = CandidateRow.buildRows(candidate: candidate)
-        setupViews()
+        view.backgroundColor = .black
     }
     
-    private func setupViews() {
-        _ = tableView
-        _ = closeButton
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
     }
 }
 
@@ -108,39 +116,16 @@ extension CandidateViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = self.row(at: indexPath)
-        return row.cell(for: indexPath, in: tableView)
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        for cell in tableView.visibleCells.compactMap({ $0 as? PictureCell }) {
-            cell.setBackgroundOffset(offset: offset(path: IndexPath(row: 0, section: 0)))
-        }
-    }
-    
-    private func offset(path: IndexPath) -> CGFloat {
-        let cellFrame = tableView.rectForRow(at: path)
-        let cellFrameInTable = tableView.convert(cellFrame, to: tableView.superview)
-        let cellOffset = cellFrameInTable.origin.y + cellFrameInTable.size.height
-        let tableHeight = tableView.bounds.height + cellFrameInTable.height
-        let cellOffsetFactor = cellOffset / tableHeight
-        return cellOffsetFactor
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        for cell in tableView.visibleCells.compactMap({ $0 as? PictureCell }) {
-            cell.setBackgroundOffset(offset: offset(path: IndexPath(row: 0, section: 0)))
-        }
+        return row.cell(for: indexPath, in: tableView, with: candidate, delegate: self)
     }
 }
 
 // MARK: -
-// MARK: subscriber
-extension CandidateViewController: Subscriber {
-    func update(with state: CandidateState) {
-        if state.candidates.isEmpty {
-            return
-        }
-        self.rows = CandidateRow.buildRows(candidate: state.candidates[0])
-        tableView.reloadData()
+// MARK: candidateRowDelegate
+extension CandidateViewController: CandidateRowDelegate {
+    func articleCell(_ cell: UITableViewCell, wasSelectedAt: IndexPath, with article: Article) {
+        guard let url = article.url else { return }
+        let vc = SFSafariViewController(url: url)
+        present(vc, animated: true, completion: nil)
     }
 }

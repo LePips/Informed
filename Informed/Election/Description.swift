@@ -45,6 +45,11 @@ struct Info: Codable {
     var title: String
     var content: String
     
+    init(title: String, content: String) {
+        self.title = title
+        self.content = content
+    }
+    
     static func nothing() -> Info {
         return Info(title: "Nothing", content: "No content fo u")
     }

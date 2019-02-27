@@ -13,6 +13,7 @@ enum ElectionEventChange {
     case fetchedAll([Election])
     case fetchedSingle(Election)
     case fetchedFeature(Election)
+    case refreshedSingle(Election)
 }
 
 private let sharedCore: Core<ElectionState> = {
@@ -39,14 +40,30 @@ struct ElectionState: State {
         switch event {
         case .fetchedAll(let elections):
             self.elections = elections
-        case .fetchedSingle(let election):
-            self.elections.append(election)
+        case .fetchedSingle: ()
         case .fetchedFeature(let election):
             self.featuredElection = election
+        case .refreshedSingle(let election):
+            elections.replace(with: election)
         }
     }
     
     static func emptyState() -> ElectionState {
         return ElectionState(elections: [], featuredElection: nil)
+    }
+}
+
+extension Election: Equatable {
+    static func ==(lhs: Election, rhs: Election) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
+extension Array where Element == Election {
+    mutating func replace(with election: Election) {
+        if let oldElection = self.filter({ $0.id == election.id }).first {
+            let index = self.firstIndex(where: { $0.id == oldElection.id })!
+            self[index] = election
+        }
     }
 }

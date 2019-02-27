@@ -10,40 +10,27 @@ import UIKit
 import SharedPips
 import FirebaseAuth
 
-class ElectionViewController: UIViewController {
+class ElectionViewController: BasicViewController {
     
-    var election: Election!
-    var rows = [ElectionRow]()
+    private var election: Election
+    private var rows: [ElectionRow] = []
+    private lazy var statusBarUnderlay: UIView = self.makeStatusBarUnderlay()
+    private lazy var tableView: UITableView = self.makeTableView()
+    lazy var refreshController: UIRefreshControl = makeRefreshController()
     
-    private lazy var statusBarUnderlay: UIView = self._statusBarUnderlay()
-    private func _statusBarUnderlay() -> UIView {
-        let underlay = UIView.forAutoLayout()
-        
-        view.addSubview(underlay)
-        NSLayoutConstraint.activate([
-            underlay.topAnchor ⩵ view.topAnchor,
-            underlay.leftAnchor ⩵ view.leftAnchor,
-            underlay.rightAnchor ⩵ view.rightAnchor,
-            underlay.heightAnchor ⩵ 20
-            ])
-        
-        underlay.backgroundColor = .white
-        
-        return underlay
+    override func setupSubviews() {
+        view.addSubview(statusBarUnderlay)
+        view.addSubview(tableView)
+        view.embed(tableView)
     }
     
-    private lazy var tableView: UITableView = self._tableView()
-    private func _tableView() -> UITableView {
-        let tableView = UITableView.forAutoLayout()
-        
-        view.embed(tableView)
-        tableView.dataSource = self
-        tableView.delegate = self
-        
-        ElectionRow.configure(tableView)
-        tableView.separatorStyle = .none
-        
-        return tableView
+    override func setupLayoutConstraints() {
+        NSLayoutConstraint.activate([
+            statusBarUnderlay.topAnchor ⩵ view.topAnchor,
+            statusBarUnderlay.leftAnchor ⩵ view.leftAnchor,
+            statusBarUnderlay.rightAnchor ⩵ view.rightAnchor,
+            statusBarUnderlay.heightAnchor ⩵ 20
+            ])
     }
     
     init(with election: Election) {
@@ -57,6 +44,43 @@ class ElectionViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func makeStatusBarUnderlay() -> UIView {
+        let underlay = UIView.forAutoLayout()
+        underlay.backgroundColor = .white
+        return underlay
+    }
+    
+    private func makeTableView() -> UITableView {
+        let tableView = UITableView.forAutoLayout()
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.separatorStyle = .none
+        tableView.refreshControl = refreshController
+        ElectionRow.configure(tableView)
+        return tableView
+    }
+    
+    private func makeRefreshController() -> UIRefreshControl {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh(_:)), for: UIControlEvents.valueChanged)
+        return refreshControl
+    }
+    
+    @objc private func refresh(_ refreshControl: UIRefreshControl) {
+        Election.refreshElection(id: election.id) { election in
+            self.election = election
+            self.rows = ElectionRow.buildRows(election: election)
+            DispatchQueue.main.async {
+                refreshControl.endRefreshing()
+                self.tableView.reloadData()
+            }
+        }
+    }
+}
+
+// MARK: -
+// MARK: lifecycle
+extension ElectionViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
@@ -64,30 +88,13 @@ class ElectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        _ = tableView
-        _ = statusBarUnderlay
-        
         self.rows = ElectionRow.buildRows(election: election)
     }
 }
 
+// MARK: -
+// MARK: tableview
 extension ElectionViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return rows[indexPath.row].selectable ? indexPath : nil
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let row = rows[indexPath.row]
-        
-        switch row {
-        case .requestInfo:
-            dismiss(animated: true, completion: nil)
-//            let vc = RequestInfoViewController(election: election)
-//            navigationController?.pushViewController(vc, animated: true)
-        default: ()
-        }
-    }
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -103,6 +110,13 @@ extension ElectionViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = self.rows[indexPath.row]
-        return row.cell(for: indexPath, in: tableView)
+        return row.cell(for: indexPath, in: tableView, delegate: self)
+    }
+}
+
+extension ElectionViewController: CandidateCourselViewDelegate {
+    func candidiateViewTapped(_ view: CandidateCarouselView, candidate: Candidate) {
+        let vc = CandidateViewController(with: candidate)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

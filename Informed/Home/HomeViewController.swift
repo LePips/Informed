@@ -17,24 +17,21 @@ class HomeViewController: BasicViewController {
     
     override func setupSubviews() {
         view.addSubview(tableView)
+        view.embed(tableView)
     }
     
     override func setupLayoutConstraints() {
-        view.embed(tableView)
     }
 }
 
 extension HomeViewController {
     private func makeTableView() -> UITableView {
         let tableView = UITableView.forAutoLayout()
-        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.refreshControl = refreshController
-        
         HomeTableViewHandler.configure(tableView)
-        
         return tableView
     }
     
@@ -45,9 +42,11 @@ extension HomeViewController {
     }
     
     @objc private func refresh(_ refreshControl: UIRefreshControl) {
-        Election.getElections()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            refreshControl.endRefreshing()
+        Election.getElections { (elections) in
+            ElectionState.core.fire(.fetchedAll(elections))
+            DispatchQueue.main.async {
+                refreshControl.endRefreshing()
+            }
         }
     }
 }
@@ -70,8 +69,8 @@ extension HomeViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let profileButton = UIBarButtonItem(image: UIImage(named: "Menu")!, style: .done, target: self, action: #selector(openSideSheet))
-        navigationItem.leftBarButtonItem = profileButton
+        let sideSheetButton = UIBarButtonItem(image: UIImage(named: "Menu")!, style: .done, target: self, action: #selector(openSideSheet))
+        navigationItem.leftBarButtonItem = sideSheetButton
         
         navigationItem.title = "Informed"
     }
