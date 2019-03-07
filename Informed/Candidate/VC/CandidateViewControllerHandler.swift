@@ -9,17 +9,18 @@
 import Foundation
 import SharedPips
 
-class NewsCellHandler {
+class CandidateViewControllerHandler {
     
     private(set) var articles: [Article] = []
     private(set) var elections: [Election] = []
-    var delegate: CandidateRowDelegate?
+    var candidateRowDelegate: CandidateRowDelegate?
+    var newsCellDelegate: NewsCellDelegate?
     
     func getArticles(with keyword: String) {
         News.getFor(keyword) { (articles) in
             self.articles = articles
             DispatchQueue.main.async {
-                self.delegate?.didLoadArticles()
+                self.newsCellDelegate?.didLoadArticles()
             }
         }
     }
@@ -28,7 +29,7 @@ class NewsCellHandler {
         candidate.getElections { (elections) in
             self.elections = elections
             DispatchQueue.main.async {
-                self.delegate?.didLoadElections()
+                self.candidateRowDelegate?.didLoadElections()
             }
         }
     }

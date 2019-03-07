@@ -17,9 +17,9 @@ class ArticleView: BasicView {
     private lazy var imageView = makeImageView()
     private lazy var tapRecognizer = makeTapRecognizer()
     private var article: Article?
-    private var delegate: CandidateRowDelegate?
+    private var delegate: NewsCellDelegate?
     
-    func configure(with article: Article, delegate: CandidateRowDelegate) {
+    func configure(with article: Article, delegate: NewsCellDelegate) {
         self.article = article
         self.delegate = delegate
         
@@ -98,6 +98,6 @@ class ArticleView: BasicView {
     
     @objc private func tapped() {
         guard let article = article else { return }
-        delegate?.article(article, wasSelectedAt: IndexPath())
+        delegate?.articleWasSelected(article)
     }
 }

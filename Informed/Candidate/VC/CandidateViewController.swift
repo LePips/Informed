@@ -19,7 +19,7 @@ class CandidateViewController: BasicViewController {
     private lazy var tableView: UITableView = makeTableView()
     private lazy var backButton = makeBackButton()
     private let candidate: Candidate
-    private let handler = NewsCellHandler()
+    private let handler = CandidateViewControllerHandler()
     private var rows: [CandidateRow] = []
     
     override func setupSubviews() {
@@ -81,7 +81,8 @@ extension CandidateViewController {
         self.rows = CandidateRow.buildRows(candidate: candidate, handler: handler)
         view.backgroundColor = .black
         
-        handler.delegate = self
+        handler.newsCellDelegate = self
+        handler.candidateRowDelegate = self
         handler.getArticles(with: candidate.fullName)
         handler.getElections(with: candidate)
     }
@@ -115,33 +116,31 @@ extension CandidateViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = self.row(at: indexPath)
-        return row.cell(for: indexPath, in: tableView, delegate: self, handler: self.handler)
+        return row.cell(for: indexPath, in: tableView, delegate: self)
     }
 }
 
 // MARK: -
 // MARK: candidateRowDelegate
 extension CandidateViewController: CandidateRowDelegate {
+    func didLoadElections() {
+        self.rows = CandidateRow.buildRows(candidate: candidate, handler: handler)
+        tableView.reloadData()
+    }
+}
+
+// MARK: -
+// MARK: newsCellDelegate
+extension CandidateViewController: NewsCellDelegate {
     func didLoadArticles() {
         self.rows = CandidateRow.buildRows(candidate: candidate, handler: handler)
         tableView.reloadData()
     }
     
-    func didLoadElections() {
-        self.rows = CandidateRow.buildRows(candidate: candidate, handler: handler)
-        tableView.reloadData()
-    }
-    
-    func newsCell(_ cell: NewsCell, didUpdateAt path: IndexPath) {
-        tableView.beginUpdates()
-        tableView.reloadRows(at: [path], with: .fade)
-        tableView.endUpdates()
-    }
-    
-    func article(_ article: Article, wasSelectedAt path: IndexPath) {
+    func articleWasSelected(_ article: Article) {
         guard let url = article.url else { return }
         let vc = SFSafariViewController(url: url)
         vc.preferredBarTintColor = .black
-        present(vc, animated: true)
+        present(vc, animated: true) 
     }
 }

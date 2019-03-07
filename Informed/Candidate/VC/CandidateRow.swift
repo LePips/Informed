@@ -9,9 +9,6 @@
 import UIKit
 
 protocol CandidateRowDelegate {
-    func newsCell(_ cell: NewsCell, didUpdateAt path: IndexPath)
-    func article(_ article: Article, wasSelectedAt path: IndexPath)
-    func didLoadArticles()
     func didLoadElections()
 }
 
@@ -21,12 +18,12 @@ enum CandidateRow {
     case info(String, String)
     case attribute(Attribute)
     case elections([Election])
-    case news(Candidate)
+    case news([Article])
     case blank
 }
 
 extension CandidateRow {
-    static func buildRows(candidate: Candidate, handler: NewsCellHandler) -> [CandidateRow] {
+    static func buildRows(candidate: Candidate, handler: CandidateViewControllerHandler) -> [CandidateRow] {
         var rows: [CandidateRow] = []
         
         if let url = candidate.coverImage {
@@ -45,7 +42,7 @@ extension CandidateRow {
         }
         
         rows.append(.elections(handler.elections))
-        rows.append(.news(candidate))
+        rows.append(.news(handler.articles))
         
         rows.append(.blank)
         return rows
@@ -63,8 +60,8 @@ extension CandidateRow {
             return AttributeCell.neededHeight
         case .elections(let elections):
             return CandidateElectionsCell.neededHeight(for: elections)
-        case .news:
-            return NewsCell.neededHeight
+        case .news(let articles):
+            return NewsCell.neededHeight(for: articles)
         case .blank:
             return BlankCell.neededHeight
         }
@@ -82,7 +79,7 @@ extension CandidateRow {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
-    func cell(for path: IndexPath, in tableView: UITableView, delegate: CandidateRowDelegate, handler: NewsCellHandler) -> UITableViewCell {
+    func cell(for path: IndexPath, in tableView: UITableView, delegate: NewsCellDelegate) -> UITableViewCell {
         switch self {
         case .picture(let image):
             let cell = tableView.dequeueReusableCell(withIdentifier: CoverImageCell.identifier, for: path) as! CoverImageCell
@@ -100,9 +97,9 @@ extension CandidateRow {
             let cell = tableView.dequeueReusableCell(withIdentifier: CandidateElectionsCell.identifier, for: path) as! CandidateElectionsCell
             cell.configure(with: elections)
             return cell
-        case .news(let candidate):
+        case .news(let articles):
             let cell = tableView.dequeueReusableCell(withIdentifier: NewsCell.identifier, for: path) as! NewsCell
-            cell.configure(with: candidate, delegate: delegate, handler: handler)
+            cell.configure(with: delegate, articles: articles)
             return cell
         case .info(let title, let text):
             let cell = tableView.dequeueReusableCell(withIdentifier: SectionCell.identifier, for: path) as! SectionCell

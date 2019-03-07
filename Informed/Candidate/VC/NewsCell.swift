@@ -9,45 +9,50 @@
 import UIKit
 import SharedPips
 
+protocol NewsCellDelegate: class {
+    func articleWasSelected(_ article: Article)
+    func didLoadArticles()
+}
+
 class NewsCell: BasicTableViewCell, NeededHeight {
     
     private lazy var titleLabel = makeTitleLabel()
     private lazy var articleStackView = makeArticleStackView()
     private lazy var loadingIndicator = makeLoadingIndicator()
-    private var candidate: Candidate?
-    private var delegate: CandidateRowDelegate?
-    private var handler: NewsCellHandler?
+    private var delegate: NewsCellDelegate?
+    private var articles: [Article] = []
     
-    func configure(with candidate: Candidate, delegate: CandidateRowDelegate, handler: NewsCellHandler) {
-        self.candidate = candidate
+    func configure(with delegate: NewsCellDelegate, articles: [Article]) {
         self.delegate = delegate
-        self.handler = handler
+        self.articles = articles
         
         makeArticleViews()
     }
     
     private func makeArticleViews() {
-        if articleStackView.arrangedSubviews.count > 1 { return }
-        guard let handler = handler else { return }
+        loadingIndicator.stopAnimating()
+        loadingIndicator.removeFromSuperview()
+        if articleStackView.arrangedSubviews.count > 0 { return }
         guard let delegate = delegate else { return }
-        guard let first = handler.articles.first else { return }
-        if (handler.articles.count < 2) { return }
-        let second = handler.articles[1]
-        
+        guard let first = articles.first else { return }
         let firstView = ArticleView()
         firstView.configure(with: first, delegate: delegate)
-        let secondView = ArticleView()
-        secondView.configure(with: second, delegate: delegate)
         self.articleStackView.addArrangedSubview(firstView)
-        self.articleStackView.addArrangedSubview(secondView)
         NSLayoutConstraint.activate([
             firstView.heightAnchor ⩵ 100,
             firstView.leftAnchor ⩵ leftAnchor,
+            ])
+        
+        
+        if (articles.count < 2) { return }
+        let second = articles[1]
+        let secondView = ArticleView()
+        secondView.configure(with: second, delegate: delegate)
+        self.articleStackView.addArrangedSubview(secondView)
+        NSLayoutConstraint.activate([
             secondView.heightAnchor ⩵ 100,
             secondView.leftAnchor ⩵ leftAnchor
             ])
-        loadingIndicator.stopAnimating()
-        loadingIndicator.removeFromSuperview()
     }
     
     private func addToHolderView(_ view: UIView) -> UIView {
@@ -84,6 +89,14 @@ class NewsCell: BasicTableViewCell, NeededHeight {
     }
     
     static var neededHeight: CGFloat = 300
+    static func neededHeight(for articles: [Article]) -> CGFloat {
+        let base: CGFloat = 52
+        var height: CGFloat = 121
+        if articles.count > 2 {
+            height *= 2
+        }
+        return base + height
+    }
     
     private func getHeight() -> CGFloat {
         let titleLabelHeight = 30

@@ -12,10 +12,11 @@ enum ElectionRow {
     case attribute(Attribute)
     case section(String, String)
     case candidates([Int])
+    case news([Article])
 }
 
 extension ElectionRow {
-    static func buildRows(election: Election) -> [ElectionRow] {
+    static func buildRows(election: Election, handler: ElectionViewControllerHandler) -> [ElectionRow] {
         var electionRows = [ElectionRow]()
         
         if let date = election.actualDate {
@@ -31,7 +32,13 @@ extension ElectionRow {
             electionRows.append(.section(title, text))
         }
         
-        electionRows.append(.candidates(election.candidates))
+        if !election.candidates.isEmpty {
+            electionRows.append(.candidates(election.candidates))
+        }
+        
+        if !handler.articles.isEmpty {
+            electionRows.append(.news(handler.articles))
+        }
         
         return electionRows
     }
@@ -42,6 +49,7 @@ extension ElectionRow {
         tableView.register(AttributeCell.self, forCellReuseIdentifier: AttributeCell.identifier)
         tableView.register(SectionCell.self, forCellReuseIdentifier: SectionCell.identifier)
         tableView.register(CandidateCarouselCell.self, forCellReuseIdentifier: CandidateCarouselCell.identifier)
+        tableView.register(NewsCell.self, forCellReuseIdentifier: NewsCell.identifier)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
@@ -53,10 +61,12 @@ extension ElectionRow {
             return SectionCell.neededHeight(for: text)
         case .candidates:
             return CandidateCarouselCell.neededHeight
+        case .news(let articles):
+            return NewsCell.neededHeight(for: articles)
         }
     }
     
-    func cell(for path: IndexPath, in tableView: UITableView, delegate: CandidateCourselViewDelegate) -> UITableViewCell {
+    func cell(for path: IndexPath, in tableView: UITableView, candidateDelegate: CandidateCourselViewDelegate, newsDelegate: NewsCellDelegate) -> UITableViewCell {
         switch self {
         case .attribute(let attribute):
             let cell = tableView.dequeueReusableCell(withIdentifier: AttributeCell.identifier, for: path) as! AttributeCell
@@ -68,7 +78,11 @@ extension ElectionRow {
             return cell
         case .candidates(let ids):
             let cell = tableView.dequeueReusableCell(withIdentifier: CandidateCarouselCell.identifier, for: path) as! CandidateCarouselCell
-            cell.configure(with: ids, delegate: delegate)
+            cell.configure(with: ids, delegate: candidateDelegate)
+            return cell
+        case .news(let articles):
+            let cell = tableView.dequeueReusableCell(withIdentifier: NewsCell.identifier, for: path) as! NewsCell
+            cell.configure(with: newsDelegate, articles: articles)
             return cell
         }
     }

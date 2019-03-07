@@ -70,8 +70,8 @@ extension HomeViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let sideSheetButton = UIBarButtonItem(image: UIImage(named: "Menu")!, style: .done, target: self, action: #selector(openSideSheet))
-        navigationItem.leftBarButtonItem = sideSheetButton
+//        let sideSheetButton = UIBarButtonItem(image: UIImage(named: "Menu")!, style: .done, target: self, action: #selector(openSideSheet))
+//        navigationItem.leftBarButtonItem = sideSheetButton
         
         navigationItem.title = "Informed"
     }

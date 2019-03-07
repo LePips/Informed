@@ -109,6 +109,7 @@
 		5FDA039F2149A8EC00613822 /* leveldb-library.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FDA039D2149A8EC00613822 /* leveldb-library.framework */; };
 		5FDD5ED52152C87A006A1C8E /* AnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDD5ED42152C87A006A1C8E /* AnnouncementViewController.swift */; };
 		5FDD5ED72152C955006A1C8E /* Announcement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDD5ED62152C955006A1C8E /* Announcement.swift */; };
+		5FE3E2EC2231B8B100E7D71C /* ElectionViewControllerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE3E2EB2231B8B100E7D71C /* ElectionViewControllerHandler.swift */; };
 		5FE66E952231AFDA0048932C /* BlankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE66E942231AFDA0048932C /* BlankCell.swift */; };
 		5FE6B5CE2140204100A4DEB3 /* WatchingElectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE6B5CD2140204100A4DEB3 /* WatchingElectionRow.swift */; };
 		5FE6B5D02140204800A4DEB3 /* NationalElectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE6B5CF2140204800A4DEB3 /* NationalElectionRow.swift */; };
@@ -125,7 +126,7 @@
 		5FF420AB21A1496300FD0CDE /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF420AA21A1496300FD0CDE /* AboutViewController.swift */; };
 		5FF420AE21A149AB00FD0CDE /* SideSheetDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF420AD21A149AB00FD0CDE /* SideSheetDrawerView.swift */; };
 		5FF420B021A1526A00FD0CDE /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF420AF21A1526A00FD0CDE /* Strings.swift */; };
-		5FFA5D38222F04A5008FD628 /* NewsCellHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FFA5D37222F04A5008FD628 /* NewsCellHandler.swift */; };
+		5FFA5D38222F04A5008FD628 /* CandidateViewControllerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FFA5D37222F04A5008FD628 /* CandidateViewControllerHandler.swift */; };
 		5FFACBF52231971C00755C8D /* CandidateElectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FFACBF42231971C00755C8D /* CandidateElectionView.swift */; };
 /* End PBXBuildFile section */
 
@@ -253,6 +254,7 @@
 		5FDA03A22149AA4A00613822 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		5FDD5ED42152C87A006A1C8E /* AnnouncementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementViewController.swift; sourceTree = "<group>"; };
 		5FDD5ED62152C955006A1C8E /* Announcement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Announcement.swift; sourceTree = "<group>"; };
+		5FE3E2EB2231B8B100E7D71C /* ElectionViewControllerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectionViewControllerHandler.swift; sourceTree = "<group>"; };
 		5FE66E942231AFDA0048932C /* BlankCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlankCell.swift; sourceTree = "<group>"; };
 		5FE6B5CD2140204100A4DEB3 /* WatchingElectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchingElectionRow.swift; sourceTree = "<group>"; };
 		5FE6B5CF2140204800A4DEB3 /* NationalElectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NationalElectionRow.swift; sourceTree = "<group>"; };
@@ -269,7 +271,7 @@
 		5FF420AA21A1496300FD0CDE /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		5FF420AD21A149AB00FD0CDE /* SideSheetDrawerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideSheetDrawerView.swift; sourceTree = "<group>"; };
 		5FF420AF21A1526A00FD0CDE /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
-		5FFA5D37222F04A5008FD628 /* NewsCellHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCellHandler.swift; sourceTree = "<group>"; };
+		5FFA5D37222F04A5008FD628 /* CandidateViewControllerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateViewControllerHandler.swift; sourceTree = "<group>"; };
 		5FFACBF42231971C00755C8D /* CandidateElectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateElectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -492,11 +494,10 @@
 			isa = PBXGroup;
 			children = (
 				5F7F76A520C9F8E0003FC0C6 /* CandidateViewController.swift */,
-				5FE66E942231AFDA0048932C /* BlankCell.swift */,
+				5FFA5D37222F04A5008FD628 /* CandidateViewControllerHandler.swift */,
 				5F7F76AC20C9F9A2003FC0C6 /* CandidateRow.swift */,
 				5F5EC81420CAEE2200D77C2A /* NameCell.swift */,
 				5F6D4E4C22274A9200591A63 /* NewsCell.swift */,
-				5FFA5D37222F04A5008FD628 /* NewsCellHandler.swift */,
 				5F6D4E4E22274B0900591A63 /* ArticleView.swift */,
 				5FCF9BB1222EF37F00E8BF31 /* ArticleCell.swift */,
 				5FCF9BB3222EF5C100E8BF31 /* SectionCell.swift */,
@@ -504,6 +505,7 @@
 				5FFACBF42231971C00755C8D /* CandidateElectionView.swift */,
 				5FF36DB72221F45E0049AE1A /* CurrentPositionCell.swift */,
 				5FF36DB92221F6620049AE1A /* AttributeCell.swift */,
+				5FE66E942231AFDA0048932C /* BlankCell.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -512,6 +514,7 @@
 			isa = PBXGroup;
 			children = (
 				5F7F76A320C9F8C5003FC0C6 /* ElectionViewController.swift */,
+				5FE3E2EB2231B8B100E7D71C /* ElectionViewControllerHandler.swift */,
 				5FCCC74320F016C90008228E /* ElectionRow.swift */,
 				5FBEABC321F7C84B00EBCF14 /* CandidateCarouselCell.swift */,
 				5F7F76AE20C9FA11003FC0C6 /* CoverImageCell.swift */,
@@ -708,7 +711,7 @@
 				5FF4206D21A07DA100FD0CDE /* SideSheetViewController.swift in Sources */,
 				5FC4F78921ACF90800006E28 /* Image.swift in Sources */,
 				5FDD5ED52152C87A006A1C8E /* AnnouncementViewController.swift in Sources */,
-				5FFA5D38222F04A5008FD628 /* NewsCellHandler.swift in Sources */,
+				5FFA5D38222F04A5008FD628 /* CandidateViewControllerHandler.swift in Sources */,
 				5F7F769C20C9F3AF003FC0C6 /* Election.swift in Sources */,
 				5F200AF720CB2A1D00FAEA51 /* ElectionState.swift in Sources */,
 				5F7E5265215D7532005C3082 /* OtherCell.swift in Sources */,
@@ -771,6 +774,7 @@
 				5F6D4E4D22274A9200591A63 /* NewsCell.swift in Sources */,
 				5FE6B5D02140204800A4DEB3 /* NationalElectionRow.swift in Sources */,
 				5F110C79217AC8DA00FD70C3 /* MainRequestInfoViewController.swift in Sources */,
+				5FE3E2EC2231B8B100E7D71C /* ElectionViewControllerHandler.swift in Sources */,
 				5FF420AE21A149AB00FD0CDE /* SideSheetDrawerView.swift in Sources */,
 				5F207C1C213245A400180275 /* HalfCardCell.swift in Sources */,
 				5FCF9BB2222EF37F00E8BF31 /* ArticleCell.swift in Sources */,

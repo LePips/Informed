@@ -8,14 +8,15 @@
 
 import UIKit
 import SharedPips
-import FirebaseAuth
+import SafariServices
 
 class ElectionViewController: BasicViewController {
     
-    private var election: Election
-    private var rows: [ElectionRow] = []
     private lazy var tableView: UITableView = self.makeTableView()
-    lazy var refreshController: UIRefreshControl = makeRefreshController()
+    private lazy var refreshController: UIRefreshControl = makeRefreshController()
+    private var election: Election
+    private let handler = ElectionViewControllerHandler()
+    private var rows: [ElectionRow] = []
     
     override func setupSubviews() {
         view.addSubview(tableView)
@@ -55,7 +56,7 @@ class ElectionViewController: BasicViewController {
     @objc private func refresh(_ refreshControl: UIRefreshControl) {
         Election.refreshElection(id: election.id) { election in
             self.election = election
-            self.rows = ElectionRow.buildRows(election: election)
+            self.rows = ElectionRow.buildRows(election: election, handler: self.handler)
             DispatchQueue.main.async {
                 refreshControl.endRefreshing()
                 self.tableView.reloadData()
@@ -70,7 +71,9 @@ extension ElectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.Informed.reallyDark
-        self.rows = ElectionRow.buildRows(election: election)
+        self.rows = ElectionRow.buildRows(election: election, handler: handler)
+        handler.newsCellDelegate = self
+        handler.getArticles(with: election.title)
     }
 }
 
@@ -92,13 +95,31 @@ extension ElectionViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = self.rows[indexPath.row]
-        return row.cell(for: indexPath, in: tableView, delegate: self)
+        return row.cell(for: indexPath, in: tableView, candidateDelegate: self, newsDelegate: self)
     }
 }
 
+// MARK: -
+// MARK: candidateCarouselViewDelegate
 extension ElectionViewController: CandidateCourselViewDelegate {
     func candidiateViewTapped(_ view: CandidateCarouselView, candidate: Candidate) {
         let vc = CandidateViewController(with: candidate)
         navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+// MARK: -
+// MARK: newsCellDelegate
+extension ElectionViewController: NewsCellDelegate {
+    func didLoadArticles() {
+        self.rows = ElectionRow.buildRows(election: election, handler: handler)
+        tableView.reloadData()
+    }
+    
+    func articleWasSelected(_ article: Article) {
+        guard let url = article.url else { return }
+        let vc = SFSafariViewController(url: url)
+        vc.preferredBarTintColor = .black
+        present(vc, animated: true)
     }
 }
