@@ -14,6 +14,11 @@ class MainViewController: UINavigationController {
     init() {
         super.init(nibName: nil, bundle: nil)
         viewControllers = [HomeViewController()]
+        navigationBar.prefersLargeTitles = true
+        makeBarTransparent()
+        tintColor(.white)
+        changeTitleFontColor(.white)
+        changeLargeTitleFontColor(.white)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -22,22 +27,5 @@ class MainViewController: UINavigationController {
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.lightContent
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        AnnouncementState.core.addSubscriber(subscriber: self, update: MainViewController.update)
-        
-    }
-}
-
-extension MainViewController: Subscriber {
-    func update(with state: AnnouncementState) {
-        if !state.announcements.isEmpty {
-            let announcement = state.announcements[0]
-            let vc = AnnouncementViewController(announcement: announcement)
-            self.present(vc, animated: true)
-        }
     }
 }

@@ -10,11 +10,12 @@ import Foundation
 import SharedPips
 
 private let apiKey = "407b28693a1a4b9b804c679db6982aee"
-private var baseUrl = URLComponents(string: "https://newsapi.org/v2/everything")!
+private var baseUrl = URLComponents(string: "https://newsapi.org/v2/top-headlines")!
+private let countryParam = ["country": "us"]
 
 struct News {
     static func getFor(_ keyword: String, completion: @escaping ([Article]) -> ()) {
-        let params = ["q": keyword, "sortBy": "publishedAt"]
+        let params = ["q": keyword, "sortBy": "publishedAt", "country": "us"]
         let headers: Headers = ["x-api-key": apiKey]
         Internet.GET(url: baseUrl.url!, params: params, headers: headers) { (response) in
             if let error = response.error {
@@ -35,7 +36,6 @@ struct News {
             }
         }
     }
-    
 }
 
 extension URLComponents {

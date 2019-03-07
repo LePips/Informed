@@ -16,6 +16,16 @@ protocol Theme: Codable {
     static var base: UIColor { get }
 }
 
+struct Metrics {
+    
+    struct CellInsets {
+        static let topPadding: CGFloat = 20
+        static let leftPadding: CGFloat = 20
+        static let rightPadding: CGFloat = 20
+    }
+    
+}
+
 struct UI {
     
     static let padding: CGFloat = 15
@@ -27,7 +37,6 @@ struct UI {
     struct Lightmode: Theme {
         static var base: UIColor = .white
     }
-    
 }
 
 enum UIStateChange {

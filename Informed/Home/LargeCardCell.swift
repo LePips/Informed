@@ -20,29 +20,12 @@ class LargeCardCell: BasicTableViewCell {
     func configure(with election: Election) {
         self.election = election
         
-        if let feature = ElectionState.core.state.featuredElection {
-            self.election = feature
-        } else {
-            self.election = election
-        }
-        
-        titleLabel.text = self.election.title
-        featuredLabel.text = "Featured".uppercased()
+        titleLabel.text = "Informed Placeholder"
         
         _ = holderView
-        _ = mainImageView
         _ = titleLabel
-        _ = featuredLabel
         
-//        if let url = self.election.coverImageUrl {
-//            mainImageView.kf.setImage(with: URL(string: url)!)
-//        }
-        
-        selectionStyle = .none
-    }
-    
-    var holderBounds: CGRect {
-        return holderView.frame
+        backgroundColor = UIColor.Informed.reallyDark
     }
     
     private lazy var holderView: UIView = self._holderView()
@@ -59,18 +42,9 @@ class LargeCardCell: BasicTableViewCell {
         
         holderView.layer.cornerRadius = 10
         holderView.clipsToBounds = true
-        holderView.backgroundColor = UIColor.Informed.Secondary.secondary
+        holderView.backgroundColor = UIColor.Informed.darkGrey
         
         return holderView
-    }
-    
-    private lazy var mainImageView: UIImageView = self._mainImageView()
-    private func _mainImageView() -> UIImageView {
-        let mainImageView = UIImageView.forAutoLayout()
-        
-        holderView.embed(mainImageView)
-        
-        return mainImageView
     }
     
     private lazy var titleLabel: UILabel = self._titleLabel()
@@ -88,29 +62,10 @@ class LargeCardCell: BasicTableViewCell {
         titleLabel.lineBreakMode = .byWordWrapping
         titleLabel.textAlignment = .center
         titleLabel.baselineAdjustment = .alignCenters
-        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        titleLabel.textColor = .white
+        titleLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        titleLabel.textColor = UIColor.Informed.Text.grey
         titleLabel.numberOfLines = 0
         
         return titleLabel
     }
-    
-    private lazy var featuredLabel: UILabel = self.makeFeaturedLabel()
-    private func makeFeaturedLabel() -> UILabel {
-        let featuredLabel = UILabel.forAutoLayout()
-        
-        holderView.addSubview(featuredLabel)
-        NSLayoutConstraint.activate([
-            featuredLabel.centerXAnchor ⩵ holderView.centerXAnchor,
-            featuredLabel.topAnchor ⩵ holderView.topAnchor + 15,
-            featuredLabel.widthAnchor ⩵ holderView.widthAnchor × 0.8
-            ])
-        
-        featuredLabel.textAlignment = .center
-        featuredLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        featuredLabel.textColor = .white
-        
-        return featuredLabel
-    }
-    
 }

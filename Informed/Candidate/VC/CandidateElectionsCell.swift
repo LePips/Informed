@@ -9,71 +9,61 @@
 import UIKit
 import SharedPips
 
-class CandidateElectionsCell: BasicTableViewCell, NeededHeight {
+class CandidateElectionsCell: BasicTableViewCell {
     
     private lazy var titleLabel = makeTitleLabel()
-    private lazy var electionTitleLabel = makeElectionDateLabel()
-    private lazy var electionDateLabel = makeElectionDateLabel()
+    private lazy var electionStackView = makeElectionStackView()
+    
+    func configure(with elections: [Election]) {
+        if electionStackView.subviews.count > 0 { return }
+        for election in elections {
+            let view = CandidateElectionView.forAutoLayout()
+            view.configure(with: election)
+            electionStackView.addArrangedSubview(view)
+            NSLayoutConstraint.activate([
+                view.leftAnchor ⩵ leftAnchor,
+                view.rightAnchor ⩵ rightAnchor,
+                view.heightAnchor ⩵ CandidateElectionView.neededHeight
+                ])
+        }
+    }
     
     override func setupSubviews() {
         addSubview(titleLabel)
-        addSubview(electionTitleLabel)
-        addSubview(electionDateLabel)
+        addSubview(electionStackView)
         self.backgroundColor = .black
     }
     
     override func setupLayoutConstraints() {
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor ⩵ topAnchor,
-            titleLabel.leftAnchor ⩵ leftAnchor + 30
+            titleLabel.topAnchor ⩵ topAnchor + Metrics.CellInsets.topPadding,
+            titleLabel.leftAnchor ⩵ leftAnchor + Metrics.CellInsets.leftPadding
             ])
         NSLayoutConstraint.activate([
-            electionTitleLabel.topAnchor ⩵ titleLabel.bottomAnchor + 6,
-            electionTitleLabel.leftAnchor ⩵ leftAnchor + 30
-            ])
-        NSLayoutConstraint.activate([
-            electionDateLabel.topAnchor ⩵ titleLabel.bottomAnchor + 6,
-            electionDateLabel.rightAnchor ⩵ rightAnchor
+            electionStackView.topAnchor ⩵ titleLabel.bottomAnchor + 6,
+            electionStackView.bottomAnchor ⩵ bottomAnchor,
+            electionStackView.leftAnchor ⩵ leftAnchor,
+            electionStackView.rightAnchor ⩵ rightAnchor
             ])
     }
     
-    static var neededHeight: CGFloat = 50
-    
-    func configure(with candidate: Candidate) {
-        candidate.getElections { (elections) in
-            DispatchQueue.main.async {
-                if elections.isEmpty {
-                    self.electionTitleLabel.text = "None"
-                    self.electionDateLabel.text = ""
-                } else {
-                    self.electionTitleLabel.text = elections[0].title
-                    self.electionDateLabel.text = elections[0].date
-                }
-            }
-        }
+    static func neededHeight(for elections: [Election]) -> CGFloat {
+        let base: CGFloat = 52
+        let electionsHeight = CGFloat(elections.count) * CandidateElectionView.neededHeight
+        return base + electionsHeight
     }
     
     private func makeTitleLabel() -> UILabel {
-        let label = UILabel.forAutoLayout()
-        label.font = UIFont.systemFont(ofSize: 22, weight: .semibold)
-        label.textColor = .white
+        let label = UILabel.header()
         label.text = "Elections"
         return label
     }
     
-    // MARK: -
-    // MARK: To be replaced with stackview for multiple elections
-    private func makeElectionTitleLabel() -> UILabel {
-        let label = UILabel.forAutoLayout()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.textColor = .white
-        return label
-    }
-    
-    private func makeElectionDateLabel() -> UILabel {
-        let label = UILabel.forAutoLayout()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        label.textColor = UIColor.Informed.Text.grey
-        return label
+    private func makeElectionStackView() -> UIStackView {
+        let stackView = UIStackView.forAutoLayout()
+        stackView.alignment = .bottom
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        return stackView
     }
 }

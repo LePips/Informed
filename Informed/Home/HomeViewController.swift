@@ -22,15 +22,14 @@ class HomeViewController: BasicViewController {
     
     override func setupLayoutConstraints() {
     }
-}
 
-extension HomeViewController {
     private func makeTableView() -> UITableView {
         let tableView = UITableView.forAutoLayout()
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.refreshControl = refreshController
+        tableView.backgroundColor = UIColor.Informed.reallyDark
         HomeTableViewHandler.configure(tableView)
         return tableView
     }
@@ -38,6 +37,7 @@ extension HomeViewController {
     private func makeRefreshController() -> UIRefreshControl {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh(_:)), for: UIControlEvents.valueChanged)
+        refreshControl.tintColor = .white
         return refreshControl
     }
     
@@ -56,14 +56,15 @@ extension HomeViewController {
 extension HomeViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        navigationController?.addColorEffect(UIColor.Informed.Primary.primary)
-        navigationController?.tintColor(.white)
-        navigationController?.changeTitleFont(to: Fonts.myungjo(size: 26), color: .white)
+        view.backgroundColor = UIColor.Informed.reallyDark
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         
         handler.buildRows()
         
         ElectionState.core.addSubscriber(subscriber: self, update: HomeViewController.update)
+        Election.getElections { (elections) in
+            ElectionState.core.fire(.fetchedAll(elections))
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

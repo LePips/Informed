@@ -26,6 +26,7 @@ class SectionTitleCell: BasicTableViewCell {
     override func setupSubviews() {
         contentView.addSubview(titleLabel)
         contentView.addSubview(seeMoreLabel)
+        backgroundColor = UIColor.Informed.reallyDark
     }
     
     override func setupLayoutConstraints() {
@@ -42,6 +43,7 @@ class SectionTitleCell: BasicTableViewCell {
     private func makeTitleLabel() -> UILabel {
         let titleLabel = UILabel.forAutoLayout()
         titleLabel.setFont(.medium, size: 36)
+        titleLabel.textColor = .white
         return titleLabel
     }
     

@@ -16,6 +16,7 @@ class DividerCell: BasicTableViewCell {
     
     func configure() {
         _ = divider
+        backgroundColor = UIColor.Informed.reallyDark
     }
     
     private lazy var divider: UIView = self._divider()

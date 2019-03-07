@@ -9,85 +9,107 @@
 import UIKit
 
 protocol CandidateRowDelegate {
-    func articleCell(_ cell: UITableViewCell, wasSelectedAt: IndexPath, with article: Article)
+    func newsCell(_ cell: NewsCell, didUpdateAt path: IndexPath)
+    func article(_ article: Article, wasSelectedAt path: IndexPath)
+    func didLoadArticles()
+    func didLoadElections()
 }
 
 enum CandidateRow {
-    case picture
-    case name
+    case picture(URL)
+    case name(String)
+    case info(String, String)
     case attribute(Attribute)
-    case elections
-    case news
+    case elections([Election])
+    case news(Candidate)
+    case blank
 }
 
 extension CandidateRow {
-    static func buildRows(candidate: Candidate) -> [CandidateRow] {
+    static func buildRows(candidate: Candidate, handler: NewsCellHandler) -> [CandidateRow] {
         var rows: [CandidateRow] = []
         
-        if let _ = candidate.coverImageString {
-            rows.append(picture)
+        if let url = candidate.coverImage {
+            rows.append(.picture(url))
         }
         
-        rows.append(.name)
+        rows.append(.name(candidate.fullName))
         
         let party = Attribute(title: "Party", attribute: candidate.party)
         rows.append(.attribute(party))
         
-        rows.append(.elections)
-        rows.append(.news)
+        for section in candidate.sections {
+            guard let title = section.keys.first else { break }
+            guard let text = section.values.first else { break }
+            rows.append(.info(title, text))
+        }
+        
+        rows.append(.elections(handler.elections))
+        rows.append(.news(candidate))
+        
+        rows.append(.blank)
         return rows
     }
     
     func height() -> CGFloat {
         switch self {
         case .picture:
-            return PictureCell.neededHeight
+            return CoverImageCell.neededHeight
         case .name:
             return NameCell.neededHeight
+        case .info(_, let text):
+            return SectionCell.neededHeight(for: text)
         case .attribute:
             return AttributeCell.neededHeight
-        case .elections:
-            return CandidateElectionsCell.neededHeight
+        case .elections(let elections):
+            return CandidateElectionsCell.neededHeight(for: elections)
         case .news:
-            return 128
+            return NewsCell.neededHeight
+        case .blank:
+            return BlankCell.neededHeight
         }
     }
     
     static func configure(_ tableView: UITableView) {
-        tableView.register(PictureCell.self, forCellReuseIdentifier: PictureCell.identifier)
+        tableView.register(CoverImageCell.self, forCellReuseIdentifier: CoverImageCell.identifier)
         tableView.register(NameCell.self, forCellReuseIdentifier: NameCell.identifier)
         tableView.register(CandidateElectionsCell.self, forCellReuseIdentifier: CandidateElectionsCell.identifier)
         tableView.register(AttributeCell.self, forCellReuseIdentifier: AttributeCell.identifier)
         
         tableView.register(NewsCell.self, forCellReuseIdentifier: NewsCell.identifier)
+        tableView.register(SectionCell.self, forCellReuseIdentifier: SectionCell.identifier)
+        tableView.register(BlankCell.self, forCellReuseIdentifier: BlankCell.identifier)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
-    func cell(for path: IndexPath, in tableView: UITableView, with candidate: Candidate, delegate: CandidateRowDelegate) -> UITableViewCell {
+    func cell(for path: IndexPath, in tableView: UITableView, delegate: CandidateRowDelegate, handler: NewsCellHandler) -> UITableViewCell {
         switch self {
-        case .picture:
-            let cell = tableView.dequeueReusableCell(withIdentifier: PictureCell.identifier, for: path) as! PictureCell
-            cell.configure(with: candidate.coverImageString)
+        case .picture(let image):
+            let cell = tableView.dequeueReusableCell(withIdentifier: CoverImageCell.identifier, for: path) as! CoverImageCell
+            cell.configure(with: image)
             return cell
-        case .name:
+        case .name(let name):
             let cell = tableView.dequeueReusableCell(withIdentifier: NameCell.identifier, for: path) as! NameCell
-            cell.configure(with: candidate)
+            cell.configure(with: name)
             return cell
         case .attribute(let attribute):
             let cell = tableView.dequeueReusableCell(withIdentifier: AttributeCell.identifier, for: path) as! AttributeCell
             cell.configure(with: attribute)
             return cell
-        case .elections:
+        case .elections(let elections):
             let cell = tableView.dequeueReusableCell(withIdentifier: CandidateElectionsCell.identifier, for: path) as! CandidateElectionsCell
-            cell.configure(with: candidate)
+            cell.configure(with: elections)
             return cell
-        case .news:
+        case .news(let candidate):
             let cell = tableView.dequeueReusableCell(withIdentifier: NewsCell.identifier, for: path) as! NewsCell
-            News.getFor(candidate.fullName) { (articles) in
-                DispatchQueue.main.async {
-                    cell.configure(with: articles, delegate: delegate)
-                }
-            }
+            cell.configure(with: candidate, delegate: delegate, handler: handler)
+            return cell
+        case .info(let title, let text):
+            let cell = tableView.dequeueReusableCell(withIdentifier: SectionCell.identifier, for: path) as! SectionCell
+            cell.configure(with: title, text: text)
+            return cell
+        case .blank:
+            let cell = tableView.dequeueReusableCell(withIdentifier: BlankCell.identifier, for: path) as! BlankCell
             return cell
         }
     }

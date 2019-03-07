@@ -27,8 +27,8 @@ class NameCell: BasicTableViewCell, NeededHeight {
     
     static var neededHeight: CGFloat = 60
     
-    func configure(with candidate: Candidate) {
-        self.nameLabel.text = candidate.fullName
+    func configure(with name: String) {
+        self.nameLabel.text = name
     }
     
     private func makeNameLabel() -> UILabel {

@@ -14,40 +14,25 @@ class ElectionViewController: BasicViewController {
     
     private var election: Election
     private var rows: [ElectionRow] = []
-    private lazy var statusBarUnderlay: UIView = self.makeStatusBarUnderlay()
     private lazy var tableView: UITableView = self.makeTableView()
     lazy var refreshController: UIRefreshControl = makeRefreshController()
     
     override func setupSubviews() {
-        view.addSubview(statusBarUnderlay)
         view.addSubview(tableView)
         view.embed(tableView)
     }
     
     override func setupLayoutConstraints() {
-        NSLayoutConstraint.activate([
-            statusBarUnderlay.topAnchor ⩵ view.topAnchor,
-            statusBarUnderlay.leftAnchor ⩵ view.leftAnchor,
-            statusBarUnderlay.rightAnchor ⩵ view.rightAnchor,
-            statusBarUnderlay.heightAnchor ⩵ 20
-            ])
     }
     
     init(with election: Election) {
         self.election = election
         super.init(nibName: nil, bundle: nil)
-        navigationItem.largeTitleDisplayMode = .never
-        title = ""
+        title = election.title
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func makeStatusBarUnderlay() -> UIView {
-        let underlay = UIView.forAutoLayout()
-        underlay.backgroundColor = .white
-        return underlay
     }
     
     private func makeTableView() -> UITableView {
@@ -56,6 +41,7 @@ class ElectionViewController: BasicViewController {
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.refreshControl = refreshController
+        tableView.backgroundColor = .black
         ElectionRow.configure(tableView)
         return tableView
     }
@@ -81,13 +67,9 @@ class ElectionViewController: BasicViewController {
 // MARK: -
 // MARK: lifecycle
 extension ElectionViewController {
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = UIColor.Informed.reallyDark
         self.rows = ElectionRow.buildRows(election: election)
     }
 }

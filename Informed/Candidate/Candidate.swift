@@ -19,8 +19,8 @@ enum CandidateType: String, Codable {
 struct Candidate: Codable {
     let first: String
     let last: String
-    let coverImageString: String?
-    let imageUrls: [String]?
+    let coverImage: URL?
+    let images: [URL]?
     let type: CandidateType
     let elections: [Int]
     let sections: [[String: String]]
@@ -32,8 +32,8 @@ struct Candidate: Codable {
     enum CodingKeys: String, CodingKey {
         case first
         case last
-        case coverImageString = "cover_image_url"
-        case imageUrls = "image_urls"
+        case coverImage = "cover_image_url"
+        case images = "image_urls"
         case type
         case elections
         case sections
@@ -44,19 +44,19 @@ struct Candidate: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.first = try container.decode(for: .first)
         self.last = try container.decode(for: .last)
-        self.coverImageString = try container.decode(for: .coverImageString)
-        self.imageUrls = try container.decode(for: .imageUrls)
+        self.coverImage = try container.decode(for: .coverImage)
+        self.images = try container.decode(for: .images)
         self.type = try container.decode(for: .type)
         self.elections = try container.decode(for: .elections)
         self.sections = try container.decode(for: .sections)
         self.party = try container.decode(for: .party)
     }
     
-    init(first: String, last: String, coverImageString: String? = nil, imageUrls: [String]? = nil, type: CandidateType, elections: [Int], sections: [[String: String]], party: String) {
+    init(first: String, last: String, coverImageString: URL? = nil, imageUrls: [URL]? = nil, type: CandidateType, elections: [Int], sections: [[String: String]], party: String) {
         self.first = first
         self.last = last
-        self.coverImageString = coverImageString
-        self.imageUrls = imageUrls
+        self.coverImage = coverImageString
+        self.images = imageUrls
         self.type = type
         self.elections = elections
         self.sections = sections

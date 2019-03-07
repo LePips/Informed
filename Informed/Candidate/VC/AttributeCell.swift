@@ -33,11 +33,11 @@ class AttributeCell: BasicTableViewCell, NeededHeight {
     override func setupLayoutConstraints() {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor ⩵ topAnchor + 5,
-            titleLabel.leftAnchor ⩵ leftAnchor + 32
+            titleLabel.leftAnchor ⩵ leftAnchor + Metrics.CellInsets.leftPadding
             ])
         NSLayoutConstraint.activate([
             attributeLabel.topAnchor ⩵ titleLabel.bottomAnchor + 3,
-            attributeLabel.leftAnchor ⩵ leftAnchor + 32
+            attributeLabel.leftAnchor ⩵ leftAnchor + Metrics.CellInsets.leftPadding
             ])
     }
     

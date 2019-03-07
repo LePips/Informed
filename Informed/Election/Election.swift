@@ -25,6 +25,11 @@ struct Election: Codable {
     let candidates: [Int]
     let sections: [[String: String]]
     let lastEdited: String
+    var actualDate: Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.date(from: date)
+    }
     
     enum CodingKeys: String, CodingKey {
         case title = "title"
@@ -88,7 +93,7 @@ struct Election: Codable {
                     let elections = try JSONDecoder().decode([Election].self, from: electionData)
                     completion(elections)
                 } catch {
-                    return
+                    print(error)
                 }
             }
         }

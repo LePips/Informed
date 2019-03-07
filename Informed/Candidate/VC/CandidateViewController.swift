@@ -16,10 +16,11 @@ class CandidateViewController: BasicViewController {
         return .lightContent
     }
     
-    private let candidate: Candidate
-    private var rows: [CandidateRow] = []
     private lazy var tableView: UITableView = makeTableView()
     private lazy var backButton = makeBackButton()
+    private let candidate: Candidate
+    private let handler = NewsCellHandler()
+    private var rows: [CandidateRow] = []
     
     override func setupSubviews() {
         view.embed(tableView)
@@ -30,8 +31,8 @@ class CandidateViewController: BasicViewController {
         NSLayoutConstraint.activate([
             backButton.topAnchor ⩵ view.safeAreaLayoutGuide.topAnchor + 15,
             backButton.leftAnchor ⩵ view.leftAnchor + 15,
-            backButton.widthAnchor ⩵ 35,
-            backButton.heightAnchor ⩵ 35
+            backButton.widthAnchor ⩵ 36,
+            backButton.heightAnchor ⩵ 36
             ])
     }
     
@@ -59,7 +60,8 @@ class CandidateViewController: BasicViewController {
         button.addTarget(self, action: #selector(back), for: .touchUpInside)
         button.setImage(UIImage.vector("Left"), for: .normal)
         button.setTitle("", for: .normal)
-        button.backgroundColor = .white
+        button.backgroundColor = UIColor.white.withAlphaComponent(0.5)
+        button.layer.cornerRadius = 18
         return button
     }
     
@@ -71,27 +73,24 @@ class CandidateViewController: BasicViewController {
 // MARK: -
 // MARK: lifecycle
 extension CandidateViewController {
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: false)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.rows = CandidateRow.buildRows(candidate: candidate)
+        addBehaviors(behaviors: [HideNavigationBarBehavior(animated: true)])
+        
+        self.rows = CandidateRow.buildRows(candidate: candidate, handler: handler)
         view.backgroundColor = .black
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
+        
+        handler.delegate = self
+        handler.getArticles(with: candidate.fullName)
+        handler.getElections(with: candidate)
     }
 }
 
 // MARK: -
 // MARK: tableView
 extension CandidateViewController: UITableViewDataSource, UITableViewDelegate {
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -116,16 +115,33 @@ extension CandidateViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = self.row(at: indexPath)
-        return row.cell(for: indexPath, in: tableView, with: candidate, delegate: self)
+        return row.cell(for: indexPath, in: tableView, delegate: self, handler: self.handler)
     }
 }
 
 // MARK: -
 // MARK: candidateRowDelegate
 extension CandidateViewController: CandidateRowDelegate {
-    func articleCell(_ cell: UITableViewCell, wasSelectedAt: IndexPath, with article: Article) {
+    func didLoadArticles() {
+        self.rows = CandidateRow.buildRows(candidate: candidate, handler: handler)
+        tableView.reloadData()
+    }
+    
+    func didLoadElections() {
+        self.rows = CandidateRow.buildRows(candidate: candidate, handler: handler)
+        tableView.reloadData()
+    }
+    
+    func newsCell(_ cell: NewsCell, didUpdateAt path: IndexPath) {
+        tableView.beginUpdates()
+        tableView.reloadRows(at: [path], with: .fade)
+        tableView.endUpdates()
+    }
+    
+    func article(_ article: Article, wasSelectedAt path: IndexPath) {
         guard let url = article.url else { return }
         let vc = SFSafariViewController(url: url)
-        present(vc, animated: true, completion: nil)
+        vc.preferredBarTintColor = .black
+        present(vc, animated: true)
     }
 }
