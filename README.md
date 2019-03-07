@@ -1,6 +1,7 @@
 # Informed
 
 Informed is an app to display information about an election and its candidates.
+
 Uses information from the backend at [InformedWeb](https://github.com/LePips/InformedWeb)
 
 # Technologies and Strategies Used
