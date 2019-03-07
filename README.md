@@ -14,3 +14,4 @@ Uses information from the backend at [InformedWeb](https://github.com/LePips/Inf
 
 # Disclaimer
 I don't have the time to clean it up, as it has been a long work in progress.
+It is very, very, messy. But glad that it works.
